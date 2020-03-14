@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mooconstructor14march/utility/my_style.dart';
+import 'package:mooconstructor14march/widget/register.dart';
 
 class Authen extends StatefulWidget {
   @override
@@ -15,7 +16,15 @@ class _AuthenState extends State<Authen> {
     return Container(
       width: 250.0,
       child: FlatButton(
-        onPressed: () {},
+        onPressed: () {
+          print('Click register');
+
+          MaterialPageRoute route =
+              MaterialPageRoute(builder: (BuildContext context) {
+            return Register();
+          });
+          Navigator.of(context).push(route);
+        },
         child: Text(
           'New Register',
           style: TextStyle(
@@ -121,7 +130,7 @@ class _AuthenState extends State<Authen> {
       body: Container(
         decoration: BoxDecoration(
           gradient: RadialGradient(
-            radius: 1.0,
+            radius: 1.1,
             colors: <Color>[
               Colors.white,
               MyStyle().primaryColor,
@@ -129,21 +138,23 @@ class _AuthenState extends State<Authen> {
           ),
         ),
         child: Center(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              showLogo(),
-              mySizeBox(),
-              showAppName(),
-              mySizeBox(),
-              userForm(),
-              mySizeBox(),
-              passwordForm(),
-              mySizeBox(),
-              loginButton(),
-              // mySizeBox(),
-              registerButton(),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                showLogo(),
+                mySizeBox(),
+                showAppName(),
+                mySizeBox(),
+                userForm(),
+                mySizeBox(),
+                passwordForm(),
+                mySizeBox(),
+                loginButton(),
+                // mySizeBox(),
+                registerButton(),
+              ],
+            ),
           ),
         ),
       ),
