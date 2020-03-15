@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "739264176335",
+    "firebase_url": "https://mooconstructor14march.firebaseio.com",
+    "project_id": "mooconstructor14march",
+    "storage_bucket": "mooconstructor14march.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:739264176335:android:1e314ac2d85e3a5d8dd7ba",
+        "android_client_info": {
+          "package_name": "com.flutterthailand.mooconstructor14march"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "739264176335-o1b0s3ainerfbrrs6dh45oeu9f8tr5gp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAev5g-Ujy7m-Ls_4aB2OwhWFwMbOOZHZ8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "739264176335-o1b0s3ainerfbrrs6dh45oeu9f8tr5gp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

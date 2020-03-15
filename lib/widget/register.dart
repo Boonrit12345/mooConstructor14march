@@ -195,7 +195,7 @@ class _RegisterState extends State<Register> {
         height: MediaQuery.of(context).size.height * 0.4,
         padding: EdgeInsets.all(16.0), // ระยะขอบของรูป
         child:
-            file == null ? Image.asset('images/avatar1.png') : Image.file(file),
+            file == null ? Image.asset('images/avatar.png') : Image.file(file),
       ),
     );
   }
@@ -247,18 +247,22 @@ class _RegisterState extends State<Register> {
           normalDialog(context, 'No Avater', 'Please choose Camera or Gallory');
         } else if (levelString == null) {
           normalDialog(context, 'No level', 'Please choose Level');
-        } else if (
-            name == null ||
+        } else if (name == null ||
             name.isEmpty ||
             email == null ||
             email.isEmpty ||
             password == null ||
             password.isEmpty) {
           normalDialog(context, 'Have space', 'Please fill every blank');
-        } else {}
+        } else {
+          authenThread();
+        }
       },
     );
   }
+
+// สมัครสมาชิก
+  Future<void> authenThread() async {}
 
   @override
   Widget build(BuildContext context) {
