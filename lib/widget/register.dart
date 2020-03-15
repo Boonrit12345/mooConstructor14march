@@ -1,9 +1,14 @@
 import 'dart:io';
+import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mooconstructor14march/utility/my_style.dart';
 import 'package:mooconstructor14march/utility/normal_dialog.dart';
+import 'package:mooconstructor14march/widget/my_service.dart';
 
 class Register extends StatefulWidget {
   @override
@@ -12,7 +17,7 @@ class Register extends StatefulWidget {
 
 class _RegisterState extends State<Register> {
 // Field
-  String levelString, urlAvatar, name, email, password;
+  String levelString, urlAvatar, name, email, password, uidUser;
   File file;
 
 // Method
@@ -262,7 +267,54 @@ class _RegisterState extends State<Register> {
   }
 
 // สมัครสมาชิก
-  Future<void> authenThread() async {}
+  Future<void> authenThread() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    await auth
+        .createUserWithEmailAndPassword(email: email, password: password)
+        .then(
+      (value) {
+        FirebaseUser firebaseUser = value.user;
+        uidUser = firebaseUser.uid;
+        print('Register Success ==>>  $uidUser');
+        uploadImageToStorage();
+      },
+    ).catchError((error) {
+      String title = error.code;
+      String message = error.message;
+      normalDialog(context, title, message);
+    });
+  }
+
+  Future<void> uploadImageToStorage() async {
+    Random random = Random();
+    int i = random.nextInt(100000);
+    String string = 'Avatar/avatar$i.jpg';
+
+    FirebaseStorage firebaseStorage = FirebaseStorage.instance;
+    StorageReference storageReference = firebaseStorage.ref().child(string);
+    StorageUploadTask storageUploadTask = storageReference.putFile(file);
+
+    urlAvatar = await (await storageUploadTask.onComplete).ref.getDownloadURL();
+    print('urlAvatar = $urlAvatar');
+    insertDataToCloudFireStorage();
+  }
+
+  Future<void> insertDataToCloudFireStorage() async {
+    Map<String, dynamic> map = Map();
+    map['Email'] = email;
+    map['Name'] = name;
+    map['Level'] = levelString;
+    map['UrlAvatar'] = urlAvatar;
+
+    Firestore firestore = Firestore.instance;
+
+    await firestore.collection('User').document(uidUser).setData(map).then(
+          (value)  {
+            MaterialPageRoute route = MaterialPageRoute(builder: (value)=>MyService());
+            Navigator.of(context).pushAndRemoveUntil(route, (route) => false);
+          },
+        );
+  }
 
   @override
   Widget build(BuildContext context) {
