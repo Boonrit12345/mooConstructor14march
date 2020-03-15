@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mooconstructor14march/utility/my_style.dart';
+import 'package:mooconstructor14march/utility/normal_dialog.dart';
 import 'package:mooconstructor14march/widget/my_service.dart';
 import 'package:mooconstructor14march/widget/register.dart';
 
@@ -13,6 +14,7 @@ class Authen extends StatefulWidget {
 class _AuthenState extends State<Authen> {
 // Field
   bool status = true;
+  String user, password;
 
 // Method
   @override
@@ -25,14 +27,18 @@ class _AuthenState extends State<Authen> {
     FirebaseAuth auth = FirebaseAuth.instance;
     FirebaseUser firebaseUser = await auth.currentUser();
     if (firebaseUser != null) {
-      MaterialPageRoute route =
-          MaterialPageRoute(builder: (value) => MyService());
-      Navigator.of(context).pushAndRemoveUntil(route, (route) => false);
+      routeToMyService();
     } else {
       setState(() {
         status = false;
       });
     }
+  }
+
+  void routeToMyService() {
+    MaterialPageRoute route =
+        MaterialPageRoute(builder: (value) => MyService());
+    Navigator.of(context).pushAndRemoveUntil(route, (route) => false);
   }
 
   Widget registerButton() {
@@ -73,9 +79,32 @@ class _AuthenState extends State<Authen> {
             color: Colors.white,
           ),
         ),
-        onPressed: () {},
+        onPressed: () {
+          if (user == null ||
+              user.isEmpty ||
+              password == null ||
+              password.isEmpty) {
+            normalDialog(context, "Have space", 'Please fill every blank');
+          } else {
+            checkAuthen();
+          }
+        },
       ),
     );
+  }
+
+  Future<void> checkAuthen() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    await auth
+        .signInWithEmailAndPassword(email: user, password: password)
+        .then((value) {
+            routeToMyService();
+        })
+        .catchError((value) {
+          String title = value.code;
+          String message = value.message;
+          normalDialog(context, title, message);
+        });
   }
 
   Widget userForm() {
@@ -87,6 +116,7 @@ class _AuthenState extends State<Authen> {
       height: 35.0,
       width: 250.0,
       child: TextField(
+        onChanged: (value) => user = value.trim(),
         keyboardType: TextInputType.emailAddress,
         style: MyStyle().h3Style,
         decoration: InputDecoration(
@@ -110,6 +140,7 @@ class _AuthenState extends State<Authen> {
       height: 35.0,
       width: 250.0,
       child: TextField(
+        onChanged: (value) => password = value.trim(),
         obscureText: true,
         keyboardType: TextInputType.text,
         style: MyStyle().h3Style,
