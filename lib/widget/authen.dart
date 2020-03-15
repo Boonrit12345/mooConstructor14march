@@ -1,6 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:mooconstructor14march/utility/my_style.dart';
+import 'package:mooconstructor14march/widget/my_service.dart';
 import 'package:mooconstructor14march/widget/register.dart';
 
 class Authen extends StatefulWidget {
@@ -10,8 +12,29 @@ class Authen extends StatefulWidget {
 
 class _AuthenState extends State<Authen> {
 // Field
+  bool status = true;
 
 // Method
+  @override
+  void initState() {
+    super.initState();
+    checkStatus();
+  }
+
+  Future<void> checkStatus() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    FirebaseUser firebaseUser = await auth.currentUser();
+    if (firebaseUser != null) {
+      MaterialPageRoute route =
+          MaterialPageRoute(builder: (value) => MyService());
+      Navigator.of(context).pushAndRemoveUntil(route, (route) => false);
+    } else {
+      setState(() {
+        status = false;
+      });
+    }
+  }
+
   Widget registerButton() {
     return Container(
       width: 250.0,
@@ -127,34 +150,44 @@ class _AuthenState extends State<Authen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: BoxDecoration(
-          gradient: RadialGradient(
-            radius: 1.1,
-            colors: <Color>[
-              Colors.white,
-              MyStyle().primaryColor,
-            ],
-          ),
+      body: status ? showProcess() : mainContent(),
+    );
+  }
+
+  Widget showProcess() {
+    return Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+
+  Container mainContent() {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: RadialGradient(
+          radius: 1.1,
+          colors: <Color>[
+            Colors.white,
+            MyStyle().primaryColor,
+          ],
         ),
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                showLogo(),
-                mySizeBox(),
-                showAppName(),
-                mySizeBox(),
-                userForm(),
-                mySizeBox(),
-                passwordForm(),
-                mySizeBox(),
-                loginButton(),
-                // mySizeBox(),
-                registerButton(),
-              ],
-            ),
+      ),
+      child: Center(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              showLogo(),
+              mySizeBox(),
+              showAppName(),
+              mySizeBox(),
+              userForm(),
+              mySizeBox(),
+              passwordForm(),
+              mySizeBox(),
+              loginButton(),
+              // mySizeBox(),
+              registerButton(),
+            ],
           ),
         ),
       ),
