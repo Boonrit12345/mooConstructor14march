@@ -21,6 +21,48 @@ class _RegisterState extends State<Register> {
   File file;
 
 // Method
+
+  Widget registerButtonBootom() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          width: 280.0,
+          height: 45.0,
+          child: RaisedButton(
+            color: MyStyle().primaryColor,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20.0),
+            ),
+            child: Text(
+              'Register',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            onPressed: () {
+              if (file == null) {
+                normalDialog(
+                    context, 'No Avater', 'Please choose Camera or Gallory');
+              } else if (levelString == null) {
+                normalDialog(context, 'No level', 'Please choose Level');
+              } else if (name == null ||
+                  name.isEmpty ||
+                  email == null ||
+                  email.isEmpty ||
+                  password == null ||
+                  password.isEmpty) {
+                normalDialog(context, 'Have space', 'Please fill every blank');
+              } else {
+                authenThread();
+              }
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget nameForm() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
@@ -29,7 +71,7 @@ class _RegisterState extends State<Register> {
           // ทำช่องให้กลม
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20.0),
-            color: MyStyle().lightColor,
+            color: Colors.white,
           ),
           width: 280.0,
           height: 45.0,
@@ -60,7 +102,7 @@ class _RegisterState extends State<Register> {
           // ทำช่องให้กลม
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20.0),
-            color: MyStyle().lightColor,
+            color: Colors.white,
           ),
           width: 280.0,
           height: 45.0,
@@ -90,7 +132,7 @@ class _RegisterState extends State<Register> {
           // ทำช่องให้กลม
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20.0),
-            color: MyStyle().lightColor,
+            color: Colors.white,
           ),
           width: 280.0,
           height: 45.0,
@@ -188,6 +230,7 @@ class _RegisterState extends State<Register> {
       ),
     );
   }
+
 // Show Avatar....
   Widget showAvatar() {
     return GestureDetector(
@@ -320,6 +363,7 @@ class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blue[300],
       body: ListView(
         // กำหนดให้มีพื้นที่ใต้ page
         padding: EdgeInsets.only(bottom: 100.0),
@@ -338,6 +382,10 @@ class _RegisterState extends State<Register> {
             height: 25.0,
           ),
           passwordForm(),
+          SizedBox(
+            height: 25.0,
+          ),
+          registerButtonBootom(),
         ],
       ),
       appBar: AppBar(
