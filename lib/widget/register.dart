@@ -22,28 +22,28 @@ class _RegisterState extends State<Register> {
 
 // Method
   Widget nameForm() {
-    // ค่าสีมาตราฐาน
-    Color color = MyStyle().darkColor;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Container(
-          width: 250.0,
+          // ทำช่องให้กลม
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20.0),
+            color: MyStyle().lightColor,
+          ),
+          width: 280.0,
+          height: 45.0,
           child: TextField(
             onChanged: (String string) {
               name = string.trim();
             },
             decoration: InputDecoration(
-              enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: MyStyle().darkColor)),
-              helperStyle: TextStyle(color: color),
-              helperText: 'Type your name in blank',
-              labelStyle: MyStyle().h3Style,
-              labelText: 'Name',
-              icon: Icon(
+              border: InputBorder.none,
+              hintStyle: MyStyle().h3Style,
+              hintText: 'Name',
+              prefixIcon: Icon(
                 Icons.account_box,
-                size: 36.0,
-                color: color,
+                color: MyStyle().darkColor,
               ),
             ),
           ),
@@ -53,27 +53,27 @@ class _RegisterState extends State<Register> {
   }
 
   Widget emailForm() {
-    // ค่าสีมาตราฐาน
-    Color color = MyStyle().darkColor;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Container(
-          width: 250.0,
+          // ทำช่องให้กลม
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20.0),
+            color: MyStyle().lightColor,
+          ),
+          width: 280.0,
+          height: 45.0,
           child: TextField(
             onChanged: (value) => email = value.trim(),
             keyboardType: TextInputType.emailAddress,
             decoration: InputDecoration(
-              enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: MyStyle().darkColor)),
-              helperStyle: TextStyle(color: color),
-              helperText: 'Type your E-mail in blank',
-              labelStyle: MyStyle().h3Style,
-              labelText: 'E-mail',
-              icon: Icon(
+              border: InputBorder.none,
+              hintStyle: MyStyle().h3Style,
+              hintText: 'E-mail',
+              prefixIcon: Icon(
                 Icons.email,
-                size: 36.0,
-                color: color,
+                color: MyStyle().darkColor,
               ),
             ),
           ),
@@ -83,26 +83,26 @@ class _RegisterState extends State<Register> {
   }
 
   Widget passwordForm() {
-    // ค่าสีมาตราฐาน
-    Color color = MyStyle().darkColor;
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Container(
-          width: 250.0,
+          // ทำช่องให้กลม
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20.0),
+            color: MyStyle().lightColor,
+          ),
+          width: 280.0,
+          height: 45.0,
           child: TextField(
             onChanged: (value) => password = value.trim(),
             decoration: InputDecoration(
-              enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: MyStyle().darkColor)),
-              helperStyle: TextStyle(color: color),
-              helperText: 'Type your password in blank',
-              labelStyle: MyStyle().h3Style,
-              labelText: 'Password',
-              icon: Icon(
-                Icons.lock,
-                size: 36.0,
-                color: color,
+              border: InputBorder.none,
+              hintStyle: MyStyle().h3Style,
+              hintText: 'Password',
+              prefixIcon: Icon(
+                Icons.email,
+                color: MyStyle().darkColor,
               ),
             ),
           ),
@@ -200,7 +200,7 @@ class _RegisterState extends State<Register> {
         height: MediaQuery.of(context).size.height * 0.4,
         padding: EdgeInsets.all(16.0), // ระยะขอบของรูป
         child:
-            file == null ? Image.asset('images/avatar.png') : Image.file(file),
+            file == null ? Image.asset('images/avatar6.png') : Image.file(file),
       ),
     );
   }
@@ -309,11 +309,12 @@ class _RegisterState extends State<Register> {
     Firestore firestore = Firestore.instance;
 
     await firestore.collection('User').document(uidUser).setData(map).then(
-          (value)  {
-            MaterialPageRoute route = MaterialPageRoute(builder: (value)=>MyService());
-            Navigator.of(context).pushAndRemoveUntil(route, (route) => false);
-          },
-        );
+      (value) {
+        MaterialPageRoute route =
+            MaterialPageRoute(builder: (value) => MyService());
+        Navigator.of(context).pushAndRemoveUntil(route, (route) => false);
+      },
+    );
   }
 
   @override
@@ -323,13 +324,19 @@ class _RegisterState extends State<Register> {
         // กำหนดให้มีพื้นที่ใต้ page
         padding: EdgeInsets.only(bottom: 100.0),
         children: <Widget>[
-          showTitle('Avater :'),
+          // showTitle('Avatar'),
           showAvatar(),
-          showTitle('Level :'),
+          // showTitle('ตำแหน่ง'),
           chooseLevel(),
-          showTitle('Information'),
+          // showTitle('Information'),
           nameForm(),
+          SizedBox(
+            height: 25.0,
+          ),
           emailForm(),
+          SizedBox(
+            height: 25.0,
+          ),
           passwordForm(),
         ],
       ),

@@ -57,7 +57,9 @@ class _AuthenState extends State<Authen> {
         child: Text(
           'New Register',
           style: TextStyle(
+            fontSize: 16.0,
             fontStyle: FontStyle.italic,
+            
             color: Colors.pink,
           ),
         ),
@@ -67,11 +69,12 @@ class _AuthenState extends State<Authen> {
 
   Widget loginButton() {
     return Container(
-      width: 250.0,
+      width: 280.0,
+      height: 45.0,
       child: RaisedButton(
         color: MyStyle().primaryColor,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12.0),
+          borderRadius: BorderRadius.circular(20.0),
         ),
         child: Text(
           'Login',
@@ -93,28 +96,41 @@ class _AuthenState extends State<Authen> {
     );
   }
 
+  // ตรวจสอบว่าSign in ถูกต้องหรือไม่
   Future<void> checkAuthen() async {
     FirebaseAuth auth = FirebaseAuth.instance;
     await auth
         .signInWithEmailAndPassword(email: user, password: password)
         .then((value) {
-            routeToMyService();
+            routeToMyService(); // กรณี sign in ถูกต้อง
         })
         .catchError((value) {
           String title = value.code;
           String message = value.message;
-          normalDialog(context, title, message);
+          // normalDialog(context, title, message);
+          if (title == 'ERROR_INVALID_EMAIL') {
+            normalDialog(context, 'User!', 'กรุณากรอกอีเมลล์ใหม่ให้ถูกต้อง!');
+          } else {if (title == 'ERROR_USER_NOT_FOUND') {
+            normalDialog(context, 'User!', 'กรุณากรอก user ที่ถูกต้อง!');
+          } else {if (title == 'ERROR_WRONG_PASSWORD') {
+            normalDialog(context, 'Password!', 'กรุณากรอก Password ที่ถูกต้อง!');
+          } else {
+            normalDialog(context, title, message);
+          }
+          }
+
+          }
         });
   }
 
   Widget userForm() {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.0),
-        color: MyStyle().lightColor,
+        borderRadius: BorderRadius.circular(20.0),
+        color: Colors.white,
       ),
-      height: 35.0,
-      width: 250.0,
+      height: 45.0,
+      width: 280.0,
       child: TextField(
         onChanged: (value) => user = value.trim(),
         keyboardType: TextInputType.emailAddress,
@@ -122,7 +138,7 @@ class _AuthenState extends State<Authen> {
         decoration: InputDecoration(
             border: InputBorder.none,
             hintStyle: MyStyle().h3Style,
-            hintText: 'User :',
+            hintText: 'User',
             prefixIcon: Icon(
               Icons.email,
               color: MyStyle().darkColor,
@@ -134,11 +150,11 @@ class _AuthenState extends State<Authen> {
   Widget passwordForm() {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12.0),
-        color: MyStyle().lightColor,
+        borderRadius: BorderRadius.circular(20.0),
+        color: Colors.white,
       ),
-      height: 35.0,
-      width: 250.0,
+      height: 45.0,
+      width: 280.0,
       child: TextField(
         onChanged: (value) => password = value.trim(),
         obscureText: true,
@@ -147,34 +163,40 @@ class _AuthenState extends State<Authen> {
         decoration: InputDecoration(
             border: InputBorder.none,
             hintStyle: MyStyle().h3Style,
-            hintText: 'Password :',
+            hintText: 'Password',
             prefixIcon: Icon(
-              Icons.vpn_lock,
+              Icons.vpn_key,
               color: MyStyle().darkColor,
             )),
       ),
     );
   }
 
+  // ชื่อของแอฟ
   Widget showAppName() {
     return Text(
-      'Moo Constructor',
-      style: GoogleFonts.righteous(
-        textStyle: MyStyle().h1Style,
+      'Construction App.',
+      // style: GoogleFonts.righteous(
+        // เรียกใช้ ฟอนต์ จากเว็บ Google เพิ่มฟอนต์ลงในแอฟ ไม่ติดลิขสิทธิ์
+        style: GoogleFonts.varelaRound(
+        textStyle: MyStyle().h0Style,
+        fontWeight: FontWeight.bold,
       ),
     );
   }
 
+  // โชว์ Logo 
   Widget showLogo() {
     return Container(
-      width: 120.0,
-      child: Image.asset('images/logoblack.png'),
+      width: 220.0,
+      child: Image.asset('images/DEMOO.png'),
     );
   }
 
+  // สำหรับไว้คั้น Widget ใน Listview
   Widget mySizeBox() {
     return SizedBox(
-      height: 15.0,
+      height: 25.0,
     );
   }
 
@@ -185,6 +207,8 @@ class _AuthenState extends State<Authen> {
     );
   }
 
+
+  // กรณีที่เปิดแอฟมาแล้วให้หยุดรอ โดยแสดงวงหลมหมุนๆ ก่อน
   Widget showProcess() {
     return Center(
       child: CircularProgressIndicator(),
@@ -195,7 +219,7 @@ class _AuthenState extends State<Authen> {
     return Container(
       decoration: BoxDecoration(
         gradient: RadialGradient(
-          radius: 1.1,
+          radius: 1.0,
           colors: <Color>[
             Colors.white,
             MyStyle().primaryColor,
@@ -216,7 +240,7 @@ class _AuthenState extends State<Authen> {
               passwordForm(),
               mySizeBox(),
               loginButton(),
-              // mySizeBox(),
+              mySizeBox(),
               registerButton(),
             ],
           ),
