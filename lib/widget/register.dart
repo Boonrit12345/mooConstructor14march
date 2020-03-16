@@ -188,7 +188,7 @@ class _RegisterState extends State<Register> {
       ),
     );
   }
-// Show Avatar
+// Show Avatar....
   Widget showAvatar() {
     return GestureDetector(
       onTap: () {
