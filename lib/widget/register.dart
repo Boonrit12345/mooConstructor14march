@@ -160,18 +160,18 @@ class _RegisterState extends State<Register> {
           data: Theme.of(context)
               .copyWith(unselectedWidgetColor: MyStyle().darkColor),
           child: Radio(
-            value: 'Level1',
-            groupValue: levelString,
+            value: 'Director Board',
+            groupValue: levelString, //  กลุ่มนี้
             onChanged: (String string) {
               setState(() {
-                levelString = string;
+                levelString = string; //  ส่งค่าในตัวแปรนี้
                 print('Level ==>$levelString');
               });
             },
           ),
         ),
         Text(
-          'Level 1',
+          'Director Board',
           style: MyStyle().h3Style,
         ),
       ],
@@ -185,20 +185,134 @@ class _RegisterState extends State<Register> {
           data: Theme.of(context)
               .copyWith(unselectedWidgetColor: MyStyle().darkColor),
           child: Radio(
-            value: 'Level2',
-            groupValue: levelString,
+            value: 'Project Director',
+            groupValue: levelString, //  กลุ่มนี้
             onChanged: (String string) {
               setState(() {
-                levelString = string;
+                levelString = string; //  ส่งค่าในตัวแปรนี้
                 print('Level ==>$levelString');
               });
             },
           ),
         ),
         Text(
-          'Level 2',
+          'Project Director',
           style: MyStyle().h3Style,
         ),
+      ],
+    );
+  }
+
+  Widget level3Button() {
+    return Row(
+      children: <Widget>[
+        Theme(
+          data: Theme.of(context)
+              .copyWith(unselectedWidgetColor: MyStyle().darkColor),
+          child: Radio(
+            value: 'Project Manager',
+            groupValue: levelString, //  กลุ่มนี้
+            onChanged: (String string) {
+              setState(() {
+                levelString = string; //  ส่งค่าในตัวแปรนี้
+                print('Level ==>$levelString');
+              });
+            },
+          ),
+        ),
+        Text(
+          'Project Manager',
+          style: MyStyle().h3Style,
+        ),
+      ],
+    );
+  }
+
+  Widget level4Button() {
+    return Row(
+      children: <Widget>[
+        Theme(
+          data: Theme.of(context)
+              .copyWith(unselectedWidgetColor: MyStyle().darkColor),
+          child: Radio(
+            value: 'SE/Arch/Admin',
+            groupValue: levelString, //  กลุ่มนี้
+            onChanged: (String string) {
+              setState(() {
+                levelString = string; //  ส่งค่าในตัวแปรนี้
+                print('Level ==>$levelString');
+              });
+            },
+          ),
+        ),
+        Text(
+          'SE/Arch/Admin',
+          style: MyStyle().h3Style,
+        ),
+      ],
+    );
+  }
+
+Widget level5Button() {
+    return Row(
+      children: <Widget>[
+        Theme(
+          data: Theme.of(context)
+              .copyWith(unselectedWidgetColor: MyStyle().darkColor),
+          child: Radio(
+            value: 'Contractor',
+            groupValue: levelString, //  กลุ่มนี้
+            onChanged: (String string) {
+              setState(() {
+                levelString = string; //  ส่งค่าในตัวแปรนี้
+                print('Level ==>$levelString');
+              });
+            },
+          ),
+        ),
+        Text(
+          'Contractor',
+          style: MyStyle().h3Style,
+        ),
+      ],
+    );
+  }
+
+  Widget level6Button() {
+    return Row(
+      children: <Widget>[
+        Theme(
+          data: Theme.of(context)
+              .copyWith(unselectedWidgetColor: MyStyle().darkColor),
+          child: Radio(
+            value: 'Owner',
+            groupValue: levelString, //  กลุ่มนี้
+            onChanged: (String string) {
+              setState(() {
+                levelString = string; //  ส่งค่าในตัวแปรนี้
+                print('Level ==>$levelString');
+              });
+            },
+          ),
+        ),
+        Text(
+          'Owner',
+          style: MyStyle().h3Style,
+        ),
+      ],
+    );
+  }
+
+  Widget showChooseLevelRow(){
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        level1Button(),
+        level2Button(),
+        level2Button(),
+        level2Button(),
+        level2Button(),
+        level2Button(),
       ],
     );
   }
@@ -212,6 +326,10 @@ class _RegisterState extends State<Register> {
           children: <Widget>[
             level1Button(),
             level2Button(),
+            level3Button(),
+            level4Button(),
+            level5Button(),
+            level6Button(),
           ],
         ),
       ],
@@ -371,6 +489,7 @@ class _RegisterState extends State<Register> {
           // showTitle('Avatar'),
           showAvatar(),
           // showTitle('ตำแหน่ง'),
+          // showChooseLevelRow(),
           chooseLevel(),
           // showTitle('Information'),
           nameForm(),
