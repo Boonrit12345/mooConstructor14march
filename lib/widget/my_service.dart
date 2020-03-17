@@ -43,11 +43,99 @@ class _MyServiceState extends State<MyService> {
     });
   }
 
+  Widget myProjectList() {
+    return Container(
+      decoration:
+          BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey))),
+      child: ListTile(
+        // onTap: () => processSignOut(),
+        title: Text('My Project'),
+        subtitle: Text('โครงการที่รับผิดชอบ'),
+        leading: Icon(
+          Icons.view_agenda,
+          size: 30.0,
+        ),
+      ),
+    );
+  }
+
+  Widget listAllProjectList() {
+    return Container(
+      decoration:
+          BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey))),
+      child: ListTile(
+        // onTap: () => processSignOut(),
+        title: Text('All Project'),
+        subtitle: Text('โครงการทั้งหมด'),
+        leading: Icon(
+          Icons.view_list,
+          size: 30.0,
+        ),
+      ),
+    );
+  }
+
+  Widget myInboxMessage() {
+    return Container(
+      decoration:
+          BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey))),
+      child: ListTile(
+        // onTap: () => processSignOut(),
+        title: Text('Message'),
+        subtitle: Text('กล่องข้อความ'),
+        leading: Icon(
+          Icons.question_answer,
+          size: 30.0,
+        ),
+      ),
+    );
+  }
+
+  Widget myProfile() {
+    return Container(
+      decoration:
+          BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey))),
+      child: ListTile(
+        // onTap: () => processSignOut(),
+        title: Text('Profile'),
+        subtitle: Text('ข้อมูลส่วนตัว'),
+        leading: Icon(
+          Icons.account_circle,
+          size: 30.0,
+        ),
+      ),
+    );
+  }
+
+  Widget mySetting() {
+    return Container(
+      decoration:
+          BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey))),
+      child: ListTile(
+        // onTap: () => processSignOut(),
+        title: Text('Setting'),
+        subtitle: Text('การตั้งค่า'),
+        leading: Icon(
+          Icons.settings,
+          size: 30.0,
+        ),
+      ),
+    );
+  }
+
   Widget menuSignOut() {
-    return ListTile(
-      onTap: () => processSignOut(),
-      title: Text('Sign Out'),
-      leading: Icon(Icons.exit_to_app),
+    return Container(
+      decoration:
+          BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey))),
+      child: ListTile(
+        onTap: () => processSignOut(),
+        title: Text('Sign Out'),
+        subtitle: Text('ออกจากระบบ'),
+        leading: Icon(
+          Icons.exit_to_app,
+          size: 30.0,
+        ),
+      ),
     );
   }
 
@@ -69,6 +157,9 @@ class _MyServiceState extends State<MyService> {
 
   Widget showHead() {
     return UserAccountsDrawerHeader(
+      decoration: BoxDecoration(
+          gradient:
+              LinearGradient(colors: <Color>[Colors.blue, Colors.blue[100]])),
       currentAccountPicture: showAvatar(),
       accountName: showName(),
       accountEmail: showLevel(),
@@ -87,9 +178,137 @@ class _MyServiceState extends State<MyService> {
     return Drawer(
       child: ListView(
         children: <Widget>[
+          // DrawerHeader(child: null),
           showHead(),
+          myProjectList(),
+          listAllProjectList(),
+          myInboxMessage(),
+          myProfile(),
+          mySetting(),
           menuSignOut(),
         ],
+      ),
+    );
+  }
+
+  Widget showBody() {
+    return Container(
+      child: Center(
+        child: Text(
+          'No Project',
+          style: TextStyle(
+            color: Colors.grey,
+            fontSize: 30.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget showDetailInListView1() {
+    return Container(
+      width: 8.0,
+      height: 280.0,
+      child: Image.asset('images/projectdemo1.jpg'),
+    );
+  }
+
+  Widget showDetailInListView2() {
+    return Container(
+      width: 8.0,
+      height: 280.0,
+      child: Image.asset('images/projectdemo2.jpg'),
+    );
+  }
+
+  Widget showDetailInListView3() {
+    return Container(
+      width: 8.0,
+      height: 280.0,
+      child: Image.asset('images/projectdemo3.jpg'),
+    );
+  }
+
+  Widget showDetailInListView() {
+    return Container(
+      width: 8.0,
+      height: 280.0,
+      child: Image.asset('images/empryproject.png'),
+    );
+  }
+
+  Widget showBodyListView() {
+    return Padding(
+      padding: const EdgeInsets.all(12.0),
+      child: Container(
+        child: ListView(
+          children: <Widget>[
+            SizedBox(
+              height: 5.0,
+            ),
+            Text(
+              'Project demo 1',
+              style: TextStyle(
+                color: Colors.blue[600],
+                fontSize: 30.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              'data',
+              style: TextStyle(
+                color: Colors.grey[700],
+                fontSize: 20.0,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+            showDetailInListView1(),
+            SizedBox(
+              height: 25.0,
+            ),
+            Text(
+              'Project demo 2',
+              style: TextStyle(
+                color: Colors.blue[600],
+                fontSize: 30.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              'data',
+              style: TextStyle(
+                color: Colors.grey[700],
+                fontSize: 20.0,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+            showDetailInListView2(),
+            SizedBox(
+              height: 25.0,
+            ),
+            Text(
+              'Project demo 3',
+              style: TextStyle(
+                color: Colors.blue[600],
+                fontSize: 30.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              'data',
+              style: TextStyle(
+                color: Colors.grey[700],
+                fontSize: 20.0,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+            showDetailInListView3(),
+                        SizedBox(
+              height: 50.0,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -97,9 +316,12 @@ class _MyServiceState extends State<MyService> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      body: showBodyListView(),
+      //
+      // show Drawer
       drawer: showDrawer(),
       appBar: AppBar(
-        title: Text('My service'),
+        title: Text('My Project'),
       ),
     );
   }
