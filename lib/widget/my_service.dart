@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:mooconstructor14march/utility/my_constant.dart';
+import 'package:mooconstructor14march/utility/my_style.dart';
 import 'package:mooconstructor14march/widget/authen.dart';
 
 class MyService extends StatefulWidget {
@@ -13,6 +14,76 @@ class MyService extends StatefulWidget {
 class _MyServiceState extends State<MyService> {
 // Field
   String uidString, urlLogin, nameLogin, levelLogin;
+
+  final List<int> numbers = [1, 2, 3, 5, 8, 13, 21, 34, 55];
+
+  List wonders = [
+    Place(
+        imageUrl:
+            "https://d36tnp772eyphs.cloudfront.net/blogs/1/2018/02/Taj-Mahal.jpg",
+        name: "Taj Mahal",
+        country: "India"),
+    Place(
+        imageUrl:
+            "https://d36tnp772eyphs.cloudfront.net/blogs/1/2018/02/Christ-the-Redeemer.jpg",
+        name: "Christ the Redeemer",
+        country: "Brazil"),
+    Place(
+        imageUrl:
+            "https://d36tnp772eyphs.cloudfront.net/blogs/1/2016/03/petra-jordan9.jpg",
+        name: "Petra",
+        country: "Jordan"),
+    Place(
+        imageUrl:
+            "https://d36tnp772eyphs.cloudfront.net/blogs/1/2018/02/Great-Wall-of-China-view.jpg",
+        name: "The Great Wall of China",
+        country: "China"),
+    Place(
+        imageUrl:
+            "https://d36tnp772eyphs.cloudfront.net/blogs/1/2018/02/View-of-the-Colosseum.jpg",
+        name: "The Colosseum",
+        country: "Rome"),
+    Place(
+        imageUrl:
+            "https://d36tnp772eyphs.cloudfront.net/blogs/1/2018/02/Machu-Picchu-around-sunset.jpg",
+        name: "Machu Picchu",
+        country: "Peru"),
+    Place(
+        imageUrl:
+            "https://d36tnp772eyphs.cloudfront.net/blogs/1/2018/02/Machu-Picchu-around-sunset.jpg",
+        name: "Machu Picchu",
+        country: "Peru"),
+    Place(
+        imageUrl:
+            "https://d36tnp772eyphs.cloudfront.net/blogs/1/2018/02/Machu-Picchu-around-sunset.jpg",
+        name: "Machu Picchu",
+        country: "Peru"),
+    Place(
+        imageUrl:
+            "https://d36tnp772eyphs.cloudfront.net/blogs/1/2018/02/Machu-Picchu-around-sunset.jpg",
+        name: "Machu Picchu",
+        country: "Peru"),
+    Place(
+        imageUrl:
+            "https://d36tnp772eyphs.cloudfront.net/blogs/1/2018/02/Machu-Picchu-around-sunset.jpg",
+        name: "Machu Picchu",
+        country: "Peru"),
+    Place(
+        imageUrl:
+            "https://d36tnp772eyphs.cloudfront.net/blogs/1/2018/02/Machu-Picchu-around-sunset.jpg",
+        name: "Machu Picchu",
+        country: "Peru"),
+    Place(
+        imageUrl:
+            "https://d36tnp772eyphs.cloudfront.net/blogs/1/2018/02/Machu-Picchu-around-sunset.jpg",
+        name: "Machu Picchu",
+        country: "Peru"),
+    Place(
+        imageUrl:
+            "https://d36tnp772eyphs.cloudfront.net/blogs/1/2018/02/Chichen-Itza-at-night.jpg",
+        name: "Chichén Itzá",
+        country: "Mexico"),
+  ];
 
 // Method
   @override
@@ -206,123 +277,163 @@ class _MyServiceState extends State<MyService> {
     );
   }
 
-  Widget showDetailInListView1() {
-    return Container(
-      width: 8.0,
-      height: 280.0,
-      child: Image.asset('images/projectdemo1.jpg'),
-    );
+// =======================================================
+  Widget showbuildListView() {
+    return ListView.builder(
+        itemCount: 15,
+        itemBuilder: (_, index) {
+          return ListTile(
+            title: Text('The list item #$index'),
+            subtitle: Text('The subtitle #$index'),
+            leading: Icon(
+              Icons.check_circle,
+              size: 35.0,
+              color: MyStyle().primaryColor,
+            ),
+            trailing: Icon(Icons.keyboard_arrow_right),
+            // เมื่อกดปุ่มนี้
+            onTap: null,
+          );
+        });
   }
 
-  Widget showDetailInListView2() {
-    return Container(
-      width: 8.0,
-      height: 280.0,
-      child: Image.asset('images/projectdemo2.jpg'),
-    );
-  }
-
-  Widget showDetailInListView3() {
-    return Container(
-      width: 8.0,
-      height: 280.0,
-      child: Image.asset('images/projectdemo3.jpg'),
-    );
-  }
-
-  Widget showDetailInListView() {
-    return Container(
-      width: 8.0,
-      height: 280.0,
-      child: Image.asset('images/empryproject.png'),
-    );
-  }
-
-  Widget showBodyListView() {
+// แสดงรูปแบบ listview
+  Widget showImageListView() {
     return Padding(
-      padding: const EdgeInsets.all(12.0),
-      child: Container(
-        child: ListView(
-          children: <Widget>[
-            SizedBox(
-              height: 5.0,
-            ),
-            Text(
-              'Project demo 1',
+      padding: const EdgeInsets.all(8.0),
+      // แสดง Listview Builder
+      child: ListView.builder(
+        itemCount: wonders.length, // จำนวน  list ใน Listview
+        itemBuilder: (context, index) {
+          return ListTile(
+            // ใส่รูป
+            leading: Image.network(wonders[index].imageUrl),
+            // ให้ title
+            title: Text(
+              wonders[index].name,
               style: TextStyle(
-                color: Colors.blue[600],
-                fontSize: 30.0,
                 fontWeight: FontWeight.bold,
+                fontSize: 16.0,
               ),
             ),
-            Text(
-              'data',
-              style: TextStyle(
-                color: Colors.grey[700],
-                fontSize: 20.0,
-                fontWeight: FontWeight.normal,
-              ),
-            ),
-            showDetailInListView1(),
-            SizedBox(
-              height: 25.0,
-            ),
-            Text(
-              'Project demo 2',
-              style: TextStyle(
-                color: Colors.blue[600],
-                fontSize: 30.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              'data',
-              style: TextStyle(
-                color: Colors.grey[700],
-                fontSize: 20.0,
-                fontWeight: FontWeight.normal,
-              ),
-            ),
-            showDetailInListView2(),
-            SizedBox(
-              height: 25.0,
-            ),
-            Text(
-              'Project demo 3',
-              style: TextStyle(
-                color: Colors.blue[600],
-                fontSize: 30.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            Text(
-              'data',
-              style: TextStyle(
-                color: Colors.grey[700],
-                fontSize: 20.0,
-                fontWeight: FontWeight.normal,
-              ),
-            ),
-            showDetailInListView3(),
-                        SizedBox(
-              height: 50.0,
-            ),
-          ],
-        ),
+            // ใส subtitle
+            subtitle: Text(wonders[index].country),
+            // ใส่รูป icon ว่ามีรายละเอียดเพิ่มเติม
+            trailing: Icon(Icons.arrow_right),
+          );
+        },
       ),
     );
   }
 
+// แสดงรูปแบบ กริดวิว
+  Widget showImageGrideView() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: GridView.builder(
+        itemCount: wonders.length,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+        ),
+        itemBuilder: (context, index) {
+          return Card(
+              child: Column(
+            children: <Widget>[
+              Container(
+                  child: Image.network(
+                    wonders[index].imageUrl,
+                    fit: BoxFit.cover,
+                  ),
+                  height: 150),
+              Text(wonders[index].name),
+              Text(wonders[index].country),
+            ],
+          ));
+        },
+      ),
+    );
+  }
+
+  Widget showHorizontalListView() {
+    return ListView(
+      scrollDirection: Axis.horizontal,
+      children: <Widget>[
+        Image.network(
+            "https://d36tnp772eyphs.cloudfront.net/blogs/1/2018/02/Taj-Mahal.jpg"),
+        Image.network(
+            "https://d36tnp772eyphs.cloudfront.net/blogs/1/2018/02/Christ-the-Redeemer.jpg"),
+        Image.network(
+            "https://d36tnp772eyphs.cloudfront.net/blogs/1/2016/03/petra-jordan9.jpg"),
+        Image.network(
+            "https://d36tnp772eyphs.cloudfront.net/blogs/1/2018/02/Great-Wall-of-China-view.jpg"),
+        Image.network(
+            "https://d36tnp772eyphs.cloudfront.net/blogs/1/2018/02/View-of-the-Colosseum.jpg"),
+        Image.network(
+            "https://d36tnp772eyphs.cloudfront.net/blogs/1/2018/02/Machu-Picchu-around-sunset.jpg"),
+        Image.network(
+            "https://d36tnp772eyphs.cloudfront.net/blogs/1/2018/02/Chichen-Itza-at-night.jpg"),
+      ],
+    );
+  }
+
+// แสดง Listview แนวนอน
+  Widget showListViewHorizontal() {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
+      height: MediaQuery.of(context).size.height * 0.35,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: numbers.length,
+        itemBuilder: (context, index) {
+          return Container(
+            width: MediaQuery.of(context).size.width * 0.6,
+            child: Card(
+              color: Colors.blue,
+              child: Container(
+                child: Center(
+                  child: Text(
+                    numbers[index].toString(),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 36.0,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+// ======================================================
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: showBodyListView(),
+      body: showBody(),
+      
       //
       // show Drawer
       drawer: showDrawer(),
       appBar: AppBar(
+        centerTitle: true, // ทำให้ title อยู่กลาง
         title: Text('My Project'),
+        // leading: Icon(Icons.search),
+        actions: <Widget>[
+          Icon(Icons.search),
+          Icon(Icons.more_vert),
+        ],
       ),
     );
   }
+}
+
+// สร้าง class ให้ตัวแปร (สร้างตัวตนตัวแปร)
+class Place {
+  String imageUrl;
+  String name;
+  String country;
+
+  Place({this.imageUrl, this.name, this.country});
 }
