@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:mooconstructor14march/utility/my_style.dart';
 
-class MyProjectList extends StatefulWidget {
+class MyProjList extends StatefulWidget {
   @override
-  _MyProjectListState createState() => _MyProjectListState();
+  _MyProjListState createState() => _MyProjListState();
 }
 
-class _MyProjectListState extends State<MyProjectList> {
-//  Field
+class _MyProjListState extends State<MyProjList> {
 
+// Explicit
 
 
 // Method
-
-  Widget showDetailInListView1() {
+Widget showDetailInListView1() {
     return Container(
       width: 8.0,
       height: 280.0,
@@ -29,7 +28,7 @@ class _MyProjectListState extends State<MyProjectList> {
     );
   }
 
-  Widget showDetailInListView3() {
+    Widget showDetailInListView3() {
     return Container(
       width: 8.0,
       height: 280.0,
@@ -120,8 +119,7 @@ class _MyProjectListState extends State<MyProjectList> {
     );
   }
 
-
-  Widget showBody() {
+Widget showBody() {
     return Container(
       child: Center(
         child: Text(
@@ -137,16 +135,12 @@ class _MyProjectListState extends State<MyProjectList> {
   }
 
 
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: showBody(),
-      //
-      // show Drawer
-      // drawer: showDrawer(),
-      appBar: AppBar(
-        title: Text('My Project'),
-      ),
+      body: showBodyListView(),
     );
   }
 }

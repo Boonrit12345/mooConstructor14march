@@ -4,7 +4,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:mooconstructor14march/utility/my_constant.dart';
 import 'package:mooconstructor14march/utility/my_style.dart';
+
 import 'package:mooconstructor14march/widget/authen.dart';
+import 'package:mooconstructor14march/widget/my_proj.dart';
+import 'package:mooconstructor14march/widget/proj_menu.dart';
 
 class MyService extends StatefulWidget {
   @override
@@ -12,10 +15,11 @@ class MyService extends StatefulWidget {
 }
 
 class _MyServiceState extends State<MyService> {
-// Field
+// Explicit
   String uidString, urlLogin, nameLogin, levelLogin;
-
   final List<int> numbers = [1, 2, 3, 5, 8, 13, 21, 34, 55];
+  Widget currentWidget = ProjMenuList();
+  int _currentIndex = 0;
 
   List wonders = [
     Place(
@@ -119,7 +123,13 @@ class _MyServiceState extends State<MyService> {
       decoration:
           BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey))),
       child: ListTile(
-        // onTap: () => processSignOut(),
+        onTap: () {
+          setState(() {
+            print('Click My Project');
+            currentWidget = ProjMenuList();
+          });
+          Navigator.of(context).pop();
+        },
         title: Text('My Project'),
         subtitle: Text('โครงการที่รับผิดชอบ'),
         leading: Icon(
@@ -135,7 +145,13 @@ class _MyServiceState extends State<MyService> {
       decoration:
           BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey))),
       child: ListTile(
-        // onTap: () => processSignOut(),
+        onTap: () {
+          setState(() {
+            print('Click My Project');
+            currentWidget = MyProjList();
+          });
+          Navigator.of(context).pop();
+        },
         title: Text('All Project'),
         subtitle: Text('โครงการทั้งหมด'),
         leading: Icon(
@@ -151,7 +167,13 @@ class _MyServiceState extends State<MyService> {
       decoration:
           BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey))),
       child: ListTile(
-        // onTap: () => processSignOut(),
+        onTap: () {
+          setState(() {
+            print('Click Inbox message');
+            // currentWidget = MyProjList();
+          });
+          Navigator.of(context).pop();
+        },
         title: Text('Message'),
         subtitle: Text('กล่องข้อความ'),
         leading: Icon(
@@ -167,7 +189,13 @@ class _MyServiceState extends State<MyService> {
       decoration:
           BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey))),
       child: ListTile(
-        // onTap: () => processSignOut(),
+        onTap: () {
+          setState(() {
+            print('Click My Profile');
+            // currentWidget = MyProjList();
+          });
+          Navigator.of(context).pop();
+        },
         title: Text('Profile'),
         subtitle: Text('ข้อมูลส่วนตัว'),
         leading: Icon(
@@ -183,7 +211,13 @@ class _MyServiceState extends State<MyService> {
       decoration:
           BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey))),
       child: ListTile(
-        // onTap: () => processSignOut(),
+        onTap: () {
+          setState(() {
+            print('Click Setting');
+            // currentWidget = MyProjList();
+          });
+          Navigator.of(context).pop();
+        },
         title: Text('Setting'),
         subtitle: Text('การตั้งค่า'),
         leading: Icon(
@@ -257,6 +291,12 @@ class _MyServiceState extends State<MyService> {
           myProfile(),
           mySetting(),
           menuSignOut(),
+          // CustomListTile(Icons.view_agenda, 'My Project', () => {}),
+          // CustomListTile(Icons.view_list, 'All Project', () => {}),
+          // CustomListTile(Icons.notifications, 'Notifications', () => {}),
+          // CustomListTile(Icons.account_circle, 'User info', () => {}),
+          // CustomListTile(Icons.settings, 'Settings', () => {}),
+          // CustomListTile(Icons.exit_to_app, 'Sign Out', () => {}),
         ],
       ),
     );
@@ -411,8 +451,43 @@ class _MyServiceState extends State<MyService> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: showBody(),
-      
+      body: currentWidget,
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _currentIndex,
+        // type: BottomNavigationBarType.fixed,
+        iconSize: 30,
+        // selectedFontSize: 25,
+        // unselectedFontSize: 20,
+        unselectedItemColor: Colors.blue[200],
+        items: [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            title: Text('Home'),
+            backgroundColor: Colors.blue,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            title: Text('Search'),
+            backgroundColor: Colors.blue,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.camera),
+            title: Text('Camera'),
+            backgroundColor: Colors.blue,
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            title: Text('Person'),
+            backgroundColor: Colors.blue,
+          ),
+        ],
+        onTap: (index){
+              setState(() {
+                _currentIndex = index;
+              });
+        },
+      ),
+
       //
       // show Drawer
       drawer: showDrawer(),
@@ -436,4 +511,67 @@ class Place {
   String country;
 
   Place({this.imageUrl, this.name, this.country});
+}
+
+// class ที่ใช้สร้างเมนูใน drawer
+class CustomListTile extends StatelessWidget {
+  IconData icon;
+  String text;
+  Function onTap;
+
+  CustomListTile(this.icon, this.text, this.onTap);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(18.0, 0, 8.0, 0),
+      child: Container(
+        decoration: BoxDecoration(
+            border: Border(bottom: BorderSide(color: Colors.grey))),
+        child: InkWell(
+          splashColor: Colors.blueAccent,
+          onTap: onTap,
+          child: Container(
+            height: 70.0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Icon(
+                      icon,
+                      color: Colors.grey,
+                      size: 30.0,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            Text(
+                              text,
+                              style: TextStyle(
+                                fontSize: 16.0,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.grey[850],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Icon(
+                  Icons.arrow_right,
+                  color: Colors.grey,
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 }
