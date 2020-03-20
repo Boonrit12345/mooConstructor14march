@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:mooconstructor14march/page/defectlist.dart';
+import 'package:mooconstructor14march/page/ItcTcrListPage.dart';
 
 class ProjMenuList extends StatefulWidget {
   @override
@@ -36,15 +38,50 @@ class _ProjMenuListState extends State<ProjMenuList> {
   Widget build(BuildContext context) {
     return ListView(
       children: <Widget>[
-        CustomListTile(Icons.assessment, 'Daily Report', 'ใบรายงานการทำงานประจำวัน', () => {}),
-        CustomListTile(Icons.assignment, 'Daily Request', 'ใบขออนุมัติทำงานประจำวัน', () => {}),
-        CustomListTile(Icons.format_paint, 'Material Approval', 'ใบขออนุมัติวัสดุเพื่อใช้งาน', () => {}),
-        CustomListTile(Icons.format_shapes, 'Shop Drawing Approval', 'ใบขออนุมัติแบบเพื่อใช้งาน', () => {}),
-        CustomListTile(Icons.build, 'Method Statement Approval', 'ใบขออนุมัติวิธีการทำงาน', () => {}),
-        CustomListTile(Icons.message, 'Site Information Letter', 'จดหมายแจ้งเพื่อดำเนินการ', () => {}),
-        CustomListTile(Icons.check_circle, 'ITC & TCR', 'การตรวจสอบและการทดสอบคุณภาพ', () => {}),
-        CustomListTile(Icons.report, 'Defect List', 'ใบแจ้งงานที่มีข้อบกพร่อง', () => {}),
-        CustomListTile(Icons.warning, 'Non-Conformance Report', 'ใบแจ้งงานที่ไม่เป็นไปตามข้อกำหนด', () => {}),
+        CustomListTile(Icons.assessment, 'Daily Report',
+            'ใบรายงานการทำงานประจำวัน', () => {}),
+        CustomListTile(Icons.assignment, 'Daily Request',
+            'ใบขออนุมัติทำงานประจำวัน', () => {}),
+        CustomListTile(Icons.format_paint, 'Material Approval',
+            'ใบขออนุมัติวัสดุเพื่อใช้งาน', () => {}),
+        CustomListTile(Icons.format_shapes, 'Shop Drawing Approval',
+            'ใบขออนุมัติแบบเพื่อใช้งาน', () => {}),
+        CustomListTile(Icons.build, 'Method Statement Approval',
+            'ใบขออนุมัติวิธีการทำงาน', () => {}),
+        CustomListTile(Icons.message, 'Site Information Letter',
+            'จดหมายแจ้งเพื่อดำเนินการ', () => {}),
+        CustomListTile(
+            Icons.check_circle, 'ITC & TCR', 'การตรวจสอบและการทดสอบคุณภาพ', () {
+          print('Click ITC & TCR');
+          // 
+          // Goto page ItcTcrListPage
+          MaterialPageRoute route =
+              MaterialPageRoute(builder: (BuildContext context) {
+            return ItcTcrListPage();// =====>>>> ITC & TCR List
+          });
+          // 
+          // กดย้อนกลับได้
+          Navigator.of(context).push(route);
+          // 
+          // 
+        }),
+        CustomListTile(Icons.report, 'Defect List', 'ใบแจ้งงานที่มีข้อบกพร่อง',
+            () {
+          print('Click Defect list');
+          //
+          // Goto page 
+          MaterialPageRoute route =
+              MaterialPageRoute(builder: (BuildContext context) {
+            return DefectListPage();// =====>>>> Defect List
+          });
+          // 
+          // กดย้อนกลับได้
+          Navigator.of(context).push(route);
+          // 
+          // 
+        }),
+        CustomListTile(Icons.warning, 'Non-Conformance Report',
+            'ใบแจ้งงานที่ไม่เป็นไปตามข้อกำหนด', () => {}),
       ],
     );
   }

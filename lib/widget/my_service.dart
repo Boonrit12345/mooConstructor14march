@@ -124,6 +124,7 @@ class _MyServiceState extends State<MyService> {
           BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey))),
       child: ListTile(
         onTap: () {
+          // go to  ====>>> ProjMenuList
           setState(() {
             print('Click My Project');
             currentWidget = ProjMenuList();
@@ -291,12 +292,17 @@ class _MyServiceState extends State<MyService> {
           myProfile(),
           mySetting(),
           menuSignOut(),
-          // CustomListTile(Icons.view_agenda, 'My Project', () => {}),
-          // CustomListTile(Icons.view_list, 'All Project', () => {}),
-          // CustomListTile(Icons.notifications, 'Notifications', () => {}),
-          // CustomListTile(Icons.account_circle, 'User info', () => {}),
-          // CustomListTile(Icons.settings, 'Settings', () => {}),
-          // CustomListTile(Icons.exit_to_app, 'Sign Out', () => {}),
+          // CustomListTileDrawer(
+          //     Icons.view_agenda, 'My Project', 'โครงการที่รับผิดชอบ', () {
+          //   // go to  ====>>> ProjMenuList
+          //   setState(() {
+          //     print('Click My Project');
+          //     currentWidget = ProjMenuList();
+          //   });
+          //   Navigator.of(context).pop();
+          //   //
+          //   //
+          // }),
         ],
       ),
     );
@@ -335,35 +341,6 @@ class _MyServiceState extends State<MyService> {
             onTap: null,
           );
         });
-  }
-
-// แสดงรูปแบบ listview
-  Widget showImageListView() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      // แสดง Listview Builder
-      child: ListView.builder(
-        itemCount: wonders.length, // จำนวน  list ใน Listview
-        itemBuilder: (context, index) {
-          return ListTile(
-            // ใส่รูป
-            leading: Image.network(wonders[index].imageUrl),
-            // ให้ title
-            title: Text(
-              wonders[index].name,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16.0,
-              ),
-            ),
-            // ใส subtitle
-            subtitle: Text(wonders[index].country),
-            // ใส่รูป icon ว่ามีรายละเอียดเพิ่มเติม
-            trailing: Icon(Icons.arrow_right),
-          );
-        },
-      ),
-    );
   }
 
 // แสดงรูปแบบ กริดวิว
@@ -481,10 +458,10 @@ class _MyServiceState extends State<MyService> {
             backgroundColor: Colors.blue,
           ),
         ],
-        onTap: (index){
-              setState(() {
-                _currentIndex = index;
-              });
+        onTap: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
         },
       ),
 
@@ -496,8 +473,11 @@ class _MyServiceState extends State<MyService> {
         title: Text('My Project'),
         // leading: Icon(Icons.search),
         actions: <Widget>[
-          Icon(Icons.search),
-          Icon(Icons.more_vert),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0.0, 0.0, 20.0, 0.0),
+            child: Icon(Icons.search, size: 35.0),
+          ),
+          // Icon(Icons.more_vert, size: 30.0),
         ],
       ),
     );
@@ -517,9 +497,10 @@ class Place {
 class CustomListTile extends StatelessWidget {
   IconData icon;
   String text;
+  String subtitle;
   Function onTap;
 
-  CustomListTile(this.icon, this.text, this.onTap);
+  CustomListTile(this.icon, this.text, this.subtitle, this.onTap);
 
   @override
   Widget build(BuildContext context) {
@@ -537,24 +518,40 @@ class CustomListTile extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Icon(
-                      icon,
-                      color: Colors.grey,
-                      size: 30.0,
+                    Container(
+                      margin: const EdgeInsets.only(top: 10.0),
+                      child: Icon(
+                        icon,
+                        color: Colors.grey,
+                        size: 35.0,
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Container(
+                        margin: const EdgeInsets.only(left: 16.0),
                         child: Column(
-                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
                               text,
                               style: TextStyle(
-                                fontSize: 16.0,
+                                fontSize: 17.0,
                                 fontWeight: FontWeight.bold,
                                 color: Colors.grey[850],
+                              ),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(top: 5.0),
+                              child: Text(
+                                subtitle,
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.grey[600],
+                                ),
                               ),
                             ),
                           ],
@@ -564,7 +561,90 @@ class CustomListTile extends StatelessWidget {
                   ],
                 ),
                 Icon(
-                  Icons.arrow_right,
+                  Icons.chevron_right,
+                  color: Colors.grey,
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// class ที่ใช้สร้างเมนูใน drawer
+class CustomListTileDrawer extends StatelessWidget {
+  IconData icon;
+  String text;
+  String subtitle;
+  Function onTap;
+
+  CustomListTileDrawer(this.icon, this.text, this.subtitle, this.onTap);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(18.0, 0, 8.0, 0),
+      child: Container(
+        decoration: BoxDecoration(
+            border: Border(bottom: BorderSide(color: Colors.grey))),
+        child: InkWell(
+          splashColor: Colors.blueAccent,
+          onTap: onTap,
+          child: Container(
+            height: 70.0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      margin: const EdgeInsets.only(top: 10.0),
+                      // Icon หน้าข้อความ
+                      child: Icon(
+                        icon,
+                        color: Colors.grey,
+                        size: 30.0,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Container(
+                        margin: const EdgeInsets.only(left: 16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            // ข้อความ title
+                            Text(
+                              text,
+                              style: TextStyle(
+                                fontSize: 15.0,
+                                // fontWeight: FontWeight.bold,
+                                color: Colors.grey[850],
+                              ),
+                            ),
+                            Container(
+                              margin: const EdgeInsets.only(top: 5.0),
+                              // ข้อความ subtitle
+                              child: Text(
+                                subtitle,
+                                style: TextStyle(
+                                  fontSize: 14.0,
+                                  fontWeight: FontWeight.normal,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Icon(
+                  Icons.chevron_right,
                   color: Colors.grey,
                 )
               ],
