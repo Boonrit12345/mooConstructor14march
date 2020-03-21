@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mooconstructor14march/page/itctcrform.dart';
+import 'package:mooconstructor14march/page/itctcrformchecklist.dart';
 import 'package:mooconstructor14march/utility/my_style.dart';
 
 class ItcTcrListPage extends StatefulWidget {
@@ -9,6 +10,7 @@ class ItcTcrListPage extends StatefulWidget {
 
 class _ItcTcrListPageState extends State<ItcTcrListPage> {
   // Explicit
+
 
   // Method
 
@@ -27,18 +29,18 @@ class _ItcTcrListPageState extends State<ItcTcrListPage> {
             trailing: Icon(Icons.keyboard_arrow_right),
             // เมื่อกดปุ่มนี้
             onTap: () {
-              print('Click ');
+              print('Click ITC & TCR LIST');
               //
-              // Goto page ITC & TCR Form
-              MaterialPageRoute route =
-                  MaterialPageRoute(builder: (BuildContext context) {
-                return ItcTcrForm(); // =====>>>> ITC & TCR Form
-              });
-              //
-              // กดย้อนกลับได้
-              Navigator.of(context).push(route);
-              //
-              //
+          // Goto page ITC & TCR Form
+          MaterialPageRoute route =
+              MaterialPageRoute(builder: (BuildContext context) {
+            return ItcTcrCheckListPage(); // =====>>>> ITC & TCR LIST VIEW
+          });
+          //
+          // กดย้อนกลับได้
+          Navigator.of(context).push(route);
+          //
+          //
             },
           );
         });
@@ -75,11 +77,25 @@ class _ItcTcrListPageState extends State<ItcTcrListPage> {
           Icons.add,
           size: 35.0,
         ),
-        label: Text('ADD',style: TextStyle(
-          fontSize: 20.0,
-        ),),
+        label: Text(
+          'ADD',
+          style: TextStyle(
+            fontSize: 20.0,
+          ),
+        ),
         onPressed: () {
           print('Click Floating action Button');
+          //
+          // Goto page ITC & TCR Form
+          MaterialPageRoute route =
+              MaterialPageRoute(builder: (BuildContext context) {
+            return ItcTcrForm(); // =====>>>> ITC & TCR Form
+          });
+          //
+          // กดย้อนกลับได้
+          Navigator.of(context).push(route);
+          //
+          //
         },
       ),
     );
@@ -165,3 +181,4 @@ class CustomListTile extends StatelessWidget {
     );
   }
 }
+

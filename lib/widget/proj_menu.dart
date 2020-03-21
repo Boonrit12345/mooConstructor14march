@@ -9,8 +9,25 @@ class ProjMenuList extends StatefulWidget {
 
 class _ProjMenuListState extends State<ProjMenuList> {
 // Explicit
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
 // Method
+  _showSnackBar() {
+    print('Show SnackBar here  !');
+    final snackbar = SnackBar(
+      content: Text('เวอร์ชั่นเต็ม ติดต่อ 089-126-9021'),
+      duration: Duration(seconds: 3),
+      backgroundColor: Colors.orangeAccent,
+      action: SnackBarAction(
+          label: 'OK',
+          textColor: Colors.white,
+          onPressed: () {
+            print('Press OK on SnackBar !');
+          }),
+    );
+    // How to display SnackBar ?
+    _scaffoldKey.currentState.showSnackBar(snackbar);
+  }
 
   Widget dailyReport() {
     return Container(
@@ -36,53 +53,57 @@ class _ProjMenuListState extends State<ProjMenuList> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: <Widget>[
-        CustomListTile(Icons.assessment, 'Daily Report',
-            'ใบรายงานการทำงานประจำวัน', () => {}),
-        CustomListTile(Icons.assignment, 'Daily Request',
-            'ใบขออนุมัติทำงานประจำวัน', () => {}),
-        CustomListTile(Icons.format_paint, 'Material Approval',
-            'ใบขออนุมัติวัสดุเพื่อใช้งาน', () => {}),
-        CustomListTile(Icons.format_shapes, 'Shop Drawing Approval',
-            'ใบขออนุมัติแบบเพื่อใช้งาน', () => {}),
-        CustomListTile(Icons.build, 'Method Statement Approval',
-            'ใบขออนุมัติวิธีการทำงาน', () => {}),
-        CustomListTile(Icons.message, 'Site Information Letter',
-            'จดหมายแจ้งเพื่อดำเนินการ', () => {}),
-        CustomListTile(
-            Icons.check_circle, 'ITC & TCR', 'การตรวจสอบและการทดสอบคุณภาพ', () {
-          print('Click ITC & TCR');
-          // 
-          // Goto page ItcTcrListPage
-          MaterialPageRoute route =
-              MaterialPageRoute(builder: (BuildContext context) {
-            return ItcTcrListPage();// =====>>>> ITC & TCR List
-          });
-          // 
-          // กดย้อนกลับได้
-          Navigator.of(context).push(route);
-          // 
-          // 
-        }),
-        CustomListTile(Icons.report, 'Defect List', 'ใบแจ้งงานที่มีข้อบกพร่อง',
-            () {
-          print('Click Defect list');
-          //
-          // Goto page 
-          MaterialPageRoute route =
-              MaterialPageRoute(builder: (BuildContext context) {
-            return DefectListPage();// =====>>>> Defect List
-          });
-          // 
-          // กดย้อนกลับได้
-          Navigator.of(context).push(route);
-          // 
-          // 
-        }),
-        CustomListTile(Icons.warning, 'Non-Conformance Report',
-            'ใบแจ้งงานที่ไม่เป็นไปตามข้อกำหนด', () => {}),
-      ],
+    return new Scaffold(
+      key: _scaffoldKey,
+      body: ListView(
+        children: <Widget>[
+          CustomListTile(Icons.assessment, 'Daily Report',
+              'ใบรายงานการทำงานประจำวัน', () => {_showSnackBar()}),
+          CustomListTile(Icons.assignment, 'Daily Request',
+              'ใบขออนุมัติทำงานประจำวัน', () => {_showSnackBar()}),
+          CustomListTile(Icons.format_paint, 'Material Approval',
+              'ใบขออนุมัติวัสดุเพื่อใช้งาน', () => {_showSnackBar()}),
+          CustomListTile(Icons.format_shapes, 'Shop Drawing Approval',
+              'ใบขออนุมัติแบบเพื่อใช้งาน', () => {_showSnackBar()}),
+          CustomListTile(Icons.build, 'Method Statement Approval',
+              'ใบขออนุมัติวิธีการทำงาน', () => {_showSnackBar()}),
+          CustomListTile(Icons.message, 'Site Information Letter',
+              'จดหมายแจ้งเพื่อดำเนินการ', () => {_showSnackBar()}),
+          CustomListTile(
+              Icons.check_circle, 'ITC & TCR', 'การตรวจสอบและการทดสอบคุณภาพ',
+              () {
+            print('Click ITC & TCR');
+            //
+            // Goto page ItcTcrListPage
+            MaterialPageRoute route =
+                MaterialPageRoute(builder: (BuildContext context) {
+              return ItcTcrListPage(); // =====>>>> ITC & TCR List
+            });
+            //
+            // กดย้อนกลับได้
+            Navigator.of(context).push(route);
+            //
+            //
+          }),
+          CustomListTile(
+              Icons.report, 'Defect List', 'ใบแจ้งงานที่มีข้อบกพร่อง', () {
+            print('Click Defect list');
+            //
+            // Goto page
+            MaterialPageRoute route =
+                MaterialPageRoute(builder: (BuildContext context) {
+              return DefectListPage(); // =====>>>> Defect List
+            });
+            //
+            // กดย้อนกลับได้
+            Navigator.of(context).push(route);
+            //
+            //
+          }),
+          CustomListTile(Icons.warning, 'Non-Conformance Report',
+              'ใบแจ้งงานที่ไม่เป็นไปตามข้อกำหนด', () => {_showSnackBar()}),
+        ],
+      ),
     );
   }
 }
