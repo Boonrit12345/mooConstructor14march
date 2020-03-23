@@ -11,6 +11,10 @@ class ItcTcrForm extends StatefulWidget {
 
 class _ItcTcrFormState extends State<ItcTcrForm> {
   // Explicit
+  // final DocumentSnapshot post; // สร้าง Object post
+
+  // ItcTcrForm({this.post}); // รับค่า Object จาก parameter DocumentSnapshot
+
   String value = "";
   DateTime selectedDate = DateTime.now();
   var customFormat = DateFormat('dd-MM-yyyy');
@@ -161,7 +165,10 @@ class _ItcTcrFormState extends State<ItcTcrForm> {
         color: Colors.grey[100],
         width: 300.0,
         height: 60.0,
-        // decoration: BoxDecoration( borderRadius: BorderRadius.circular(20.0)),
+        // decoration: ShapeDecoration(
+        //   shape: RoundedRectangleBorder(
+        //       borderRadius: BorderRadius.all(Radius.circular(10.0))),
+        // ),
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: DropdownButtonHideUnderline(
@@ -207,22 +214,7 @@ class _ItcTcrFormState extends State<ItcTcrForm> {
     );
   }
 
-  void selected(_value) {
-    if (_value == "Web") {
-      // menuitems = [];
-      // populateweb();
-    } else if (_value == "App") {
-      // menuitems = [];
-      // populateapp();
-    } else if (_value == "Desktop") {
-      // menuitems = [];
-      // populatedesktop();
-    }
-    setState(() {
-      value = _value;
-      // disabledropdown = false;
-    });
-  }
+
 
   Widget showText(String text) {
     return Padding(
@@ -277,48 +269,7 @@ class _ItcTcrFormState extends State<ItcTcrForm> {
     );
   }
 
-  Widget showDropDownFill() {
-    return Container(
-      color: Colors.blue,
-      margin: EdgeInsets.all(10),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          DropdownButton<String>(
-            items: [
-              DropdownMenuItem<String>(
-                value: "App",
-                child: Center(
-                  child: Text("App"),
-                ),
-              ),
-              DropdownMenuItem<String>(
-                value: "Web",
-                child: Center(
-                  child: Text("Web"),
-                ),
-              ),
-              DropdownMenuItem<String>(
-                value: "Desktop",
-                child: Center(
-                  child: Text("Desktop"),
-                ),
-              ),
-            ],
-            onChanged: (_value) => selected(_value),
-            hint: Text(
-              value,
-              style: TextStyle(
-                fontSize: 16.0,
-              ),
-              // "Select Your Field"
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+
 
   Widget showTextFromFillDatePicker(String textfill) {
     return Container(
@@ -385,9 +336,9 @@ class _ItcTcrFormState extends State<ItcTcrForm> {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          TextFormField(            
+          TextFormField(
             onTap: null,
-            style: TextStyle(              
+            style: TextStyle(
               fontSize: 18.0,
             ),
             decoration: InputDecoration(
@@ -438,6 +389,28 @@ class _ItcTcrFormState extends State<ItcTcrForm> {
             showTextFromFillDatePicker('Actual Date : '),
             showTextPink('Submit to :'),
             showTextFromFillPink('Submit to'),
+            // 
+            // Submit Button
+            Padding(
+              padding: const EdgeInsets.fromLTRB(8.0, 25.0, 8.0, 8.0),
+              child: Container(
+                height: 50.0,
+                child: RaisedButton(
+                  onPressed: (){
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    'Submit',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                  color: Colors.blue,
+                  disabledColor: Colors.blue[50],
+                ),
+              ),
+            ),
 
             //
           ],
@@ -461,21 +434,21 @@ class _ItcTcrFormState extends State<ItcTcrForm> {
       //     print('Click Floating action Button');
       //   },
       // ),
-      floatingActionButton: FloatingActionButton.extended(
-        icon: Icon(
-          Icons.save,
-          size: 35.0,
-        ),
-        label: Text(
-          'SAVE',
-          style: TextStyle(
-            fontSize: 20.0,
-          ),
-        ),
-        onPressed: () {
-          print('Click Floating action Button');
-        },
-      ),
+      // floatingActionButton: FloatingActionButton.extended(
+      //   icon: Icon(
+      //     Icons.save,
+      //     size: 35.0,
+      //   ),
+      //   label: Text(
+      //     'SAVE',
+      //     style: TextStyle(
+      //       fontSize: 20.0,
+      //     ),
+      //   ),
+      //   onPressed: () {
+      //     print('Click Floating action Button');
+      //   },
+      // ),
     );
   }
 }

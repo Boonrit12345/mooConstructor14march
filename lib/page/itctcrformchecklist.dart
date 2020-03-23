@@ -21,33 +21,41 @@ class _ItcTcrCheckListPageState extends State<ItcTcrCheckListPage> {
           centerTitle: true,
           title: Text('ITC&TCR Check'),
           bottom: TabBar(
+            isScrollable: true,
             indicatorColor: Colors.white,
             indicatorSize: TabBarIndicatorSize.tab,
             indicatorWeight: 3.0,
             tabs: <Widget>[
               Tab(
                 icon: Icon(
-                  Icons.filter_none,
+                  Icons.check_circle,
+                  size: 30.0,
+                  color: Colors.greenAccent,
                 ),
-                text: 'info',
+                text: 'หัวเรื่อง',
               ),
               Tab(
                 icon: Icon(
-                  Icons.filter_1,
+                  Icons.check_circle,
+                  size: 30.0,
+                  color: Colors.greenAccent,
                 ),
-                text: 'A.ก่อน',
+                text: 'A.ก่อนก่อสร้าง',
               ),
               Tab(
                 icon: Icon(
-                  Icons.filter_2,
+                  Icons.error,
+                  color: Colors.redAccent,
+                  size: 30.0,
                 ),
-                text: 'B.ระหว่าง',
+                text: 'B.ระหว่างก่อสร้าง',
               ),
               Tab(
                 icon: Icon(
-                  Icons.filter_3,
+                  Icons.radio_button_unchecked,
+                  size: 30.0,
                 ),
-                text: 'C.หลัง',
+                text: 'C.หลังก่อสร้าง',
               ),
             ],
           ),
@@ -57,7 +65,7 @@ class _ItcTcrCheckListPageState extends State<ItcTcrCheckListPage> {
           children: <Widget>[
             Center(
               child: Text(
-                'Title Page',
+                'หน้าแสดงหัวกระดาษ',
                 style: TextStyle(
                     fontSize: 30.0,
                     color: Colors.grey), // แทนค่าด้วย Widget ที่เปิดหน้านั้นๆ
@@ -65,7 +73,7 @@ class _ItcTcrCheckListPageState extends State<ItcTcrCheckListPage> {
             ),
             Center(
               child: Text(
-                'Before Page',
+                'Check list ก่อนก่อสร้าง',
                 style: TextStyle(
                     fontSize: 30.0,
                     color: Colors.grey), // แทนค่าด้วย Widget ที่เปิดหน้านั้นๆ
@@ -73,7 +81,7 @@ class _ItcTcrCheckListPageState extends State<ItcTcrCheckListPage> {
             ),
             Center(
               child: Text(
-                'During Page',
+                'Check list ระหว่างก่อสร้าง',
                 style: TextStyle(
                     fontSize: 30.0,
                     color: Colors.grey), // แทนค่าด้วย Widget ที่เปิดหน้านั้นๆ
@@ -81,7 +89,7 @@ class _ItcTcrCheckListPageState extends State<ItcTcrCheckListPage> {
             ),
             Center(
               child: Text(
-                'After Page',
+                'Check list หลังก่อสร้าง',
                 style: TextStyle(
                     fontSize: 30.0,
                     color: Colors.grey), // แทนค่าด้วย Widget ที่เปิดหน้านั้นๆ
@@ -102,6 +110,7 @@ class _ItcTcrCheckListPageState extends State<ItcTcrCheckListPage> {
           ),
           onPressed: () {
             print('Click Floating action Button');
+            Navigator.of(context).pop();
           },
         ),
       ),

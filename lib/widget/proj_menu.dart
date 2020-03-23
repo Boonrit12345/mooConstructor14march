@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mooconstructor14march/page/defectlist.dart';
 import 'package:mooconstructor14march/page/ItcTcrListPage.dart';
+import 'package:mooconstructor14march/widget/dashboard.dart';
 
 class ProjMenuList extends StatefulWidget {
   @override
@@ -77,7 +78,7 @@ class _ProjMenuListState extends State<ProjMenuList> {
             // Goto page ItcTcrListPage
             MaterialPageRoute route =
                 MaterialPageRoute(builder: (BuildContext context) {
-              return ItcTcrListPage(); // =====>>>> ITC & TCR List
+              return DashboardPage(); // =====>>>> ITC & TCR List
             });
             //
             // กดย้อนกลับได้
