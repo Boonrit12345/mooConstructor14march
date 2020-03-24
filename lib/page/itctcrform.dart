@@ -1,5 +1,6 @@
 import 'package:direct_select/direct_select.dart';
 import 'package:flutter/material.dart';
+import 'package:mooconstructor14march/utility/crud.dart';
 import 'package:mooconstructor14march/utility/my_style.dart';
 import 'package:intl/intl.dart';
 
@@ -14,6 +15,17 @@ class _ItcTcrFormState extends State<ItcTcrForm> {
   // final DocumentSnapshot post; // สร้าง Object post
 
   // ItcTcrForm({this.post}); // รับค่า Object จาก parameter DocumentSnapshot
+
+  String itcProject; // ชื่อโครงการ
+  String itcITCNo; // ITC No
+  String itcJobType; // ประเภทงาน (โครงสร้าง, สถาปัตยกรรม, งานระบบ)
+  String itcJobName; // ชื่องาน
+  String itcLocation; // บริเวณ
+  String itcGridLine; // กริดไลน์
+  String itcDate; // วันที่ส่งเอกสาร
+  String itcPlanDate; // วันที่ตามแผนงาน
+  String itcActualDate; // วันที่ทำจริง
+  crudMedthods crudObj = new crudMedthods();
 
   String value = "";
   DateTime selectedDate = DateTime.now();
@@ -118,6 +130,27 @@ class _ItcTcrFormState extends State<ItcTcrForm> {
 
   // Method
 
+  Future<bool> dialogTrigger(BuildContext context) async {
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Job Done', style: TextStyle(fontSize: 15.0)),
+            content: Text('Added'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Alright'),
+                textColor: Colors.blue,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
+  }
+
   // DatePicker PART
   Future<Null> showPicker(BuildContext context) async {
     final DateTime picked = await showDatePicker(
@@ -214,8 +247,6 @@ class _ItcTcrFormState extends State<ItcTcrForm> {
     );
   }
 
-
-
   Widget showText(String text) {
     return Padding(
       padding: const EdgeInsets.all(15.0),
@@ -268,8 +299,6 @@ class _ItcTcrFormState extends State<ItcTcrForm> {
       ),
     );
   }
-
-
 
   Widget showTextFromFillDatePicker(String textfill) {
     return Container(
@@ -369,35 +398,180 @@ class _ItcTcrFormState extends State<ItcTcrForm> {
         child: ListView(
           children: <Widget>[
             showText('โครงการ'),
+
+            // add #1 - itcProject ; // ชื่อโครงการ
+            TextField(
+              decoration: InputDecoration(
+                  hintText: 'โครงการ',
+                  suffixIcon:
+                      IconButton(icon: Icon(Icons.cancel), onPressed: null),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10))),
+              onChanged: (value) {
+                this.itcProject = value;
+              },
+            ),
+            SizedBox(height: 15.0),
+
             // showTextFromFill('โครงการ : '),
             // showText('กรุณากรอกแบบฟอร์ม'),
-            showDropDownMenu(),
-            showTextFromFill('ITC No.: '),
+            // showDropDownMenu(),
+            // showTextFromFill('ITC No.: '),
+
+            // add #2 - itcITCNo ; // ITC No
+            TextField(
+              decoration: InputDecoration(
+                  hintText: 'ITC No.',
+                  suffixIcon:
+                      IconButton(icon: Icon(Icons.cancel), onPressed: null),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10))),
+              onChanged: (value) {
+                this.itcITCNo = value;
+              },
+            ),
+            SizedBox(height: 15.0),
             //
-            showText('ลักษณะงาน'),
-            showTextFromFill('ประเภทงาน : '),
-            showTextFromFill('หมวดงาน : '),
+
+            showText('รายละเอียดงาน'),
+            // showTextFromFill('ประเภทงาน : '),
+
+            // add #3 - itcJobType ; // ประเภทงาน(โครงสร้าง,สถาปัตยฯ,งานระบบ)
+            TextField(
+              decoration: InputDecoration(
+                  hintText: 'ประเภทงาน(โครงสร้าง,สถาปัตยฯ,งานระบบ)',
+                  suffixIcon:
+                      IconButton(icon: Icon(Icons.cancel), onPressed: null),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10))),
+              onChanged: (value) {
+                this.itcJobType = value;
+              },
+            ),
+            SizedBox(height: 15.0),
+            //
+            // showTextFromFill('หมวดงาน : '),
+
+            // add #4 - itcJobName ; // ชื่องาน
+            TextField(
+              decoration: InputDecoration(
+                  hintText: 'ชื่องาน',
+                  suffixIcon:
+                      IconButton(icon: Icon(Icons.cancel), onPressed: null),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10))),
+              onChanged: (value) {
+                this.itcJobName = value;
+              },
+            ),
+            SizedBox(height: 15.0),
+
             //
             showText('Location'),
-            showTextFromFill('บริเวณ : '),
-            showTextFromFill('Grid Line : '),
+            // showTextFromFill('บริเวณ : '),
+            // add #5 - itcLocation ; // บริเวณ
+            TextField(
+              decoration: InputDecoration(
+                  hintText: 'Location',
+                  suffixIcon:
+                      IconButton(icon: Icon(Icons.cancel), onPressed: null),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10))),
+              onChanged: (value) {
+                this.itcLocation = value;
+              },
+            ),
+            SizedBox(height: 15.0),
+
+            // showTextFromFill('Grid Line : '),
+            // add #6 - itcGridLine ; // กริดไลน์
+            TextField(
+              decoration: InputDecoration(
+                  hintText: 'Grid Line',
+                  suffixIcon:
+                      IconButton(icon: Icon(Icons.cancel), onPressed: null),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10))),
+              onChanged: (value) {
+                this.itcGridLine = value;
+              },
+            ),
+            SizedBox(height: 15.0),
+
             //
             showText('Date - Time'),
-            showTextFromFillDatePicker(
-                '${customFormat.format(selectedDate)}'), // ลงวันที่วันนี้
-            showTextFromFillDatePicker('Plan Date : '),
-            showTextFromFillDatePicker('Actual Date : '),
+            // showTextFromFillDatePicker('${customFormat.format(selectedDate)}'), // ลงวันที่วันนี้
+            // add #7 - itcDate ; // วันที่ส่งเอกสาร
+            TextField(
+              decoration: InputDecoration(
+                  hintText: 'Date',
+                  suffixIcon:
+                      IconButton(icon: Icon(Icons.cancel), onPressed: null),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10))),
+              onChanged: (value) {
+                this.itcDate = value;
+              },
+            ),
+            SizedBox(height: 15.0),
+
+            // showTextFromFillDatePicker('Plan Date : '),
+            // add #8 - itcPlanDate ; // วันที่ตามแผนงาน
+            TextField(
+              decoration: InputDecoration(
+                  hintText: 'Plan Date',
+                  suffixIcon:
+                      IconButton(icon: Icon(Icons.cancel), onPressed: null),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10))),
+              onChanged: (value) {
+                this.itcPlanDate = value;
+              },
+            ),
+            SizedBox(height: 15.0),
+
+            // showTextFromFillDatePicker('Actual Date : '),
+            // add #9 - itcActualDate ; // วันที่ทำจริง
+            TextField(
+              decoration: InputDecoration(
+                  hintText: 'Actual Date',
+                  suffixIcon:
+                      IconButton(icon: Icon(Icons.cancel), onPressed: null),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10))),
+              onChanged: (value) {
+                this.itcActualDate = value;
+              },
+            ),
+            SizedBox(height: 15.0),
+
             showTextPink('Submit to :'),
             showTextFromFillPink('Submit to'),
-            // 
-            // Submit Button
+            //
+            // Submit Button ======================>>
             Padding(
               padding: const EdgeInsets.fromLTRB(8.0, 25.0, 8.0, 8.0),
               child: Container(
                 height: 50.0,
                 child: RaisedButton(
-                  onPressed: (){
+                  onPressed: () {
                     Navigator.of(context).pop();
+                    crudObj.addData({
+                      // ใส่ข้อมูลใน column ชื่อ column เราตั้งจากตรงนี้ได้เลย
+                      'Project': this.itcProject,
+                      'ITC_No': this.itcITCNo,
+                      'JobType': this.itcJobType,
+                      'JobName': this.itcJobName,
+                      'Location': this.itcLocation,
+                      'GridLine': this.itcGridLine,
+                      'Date': this.itcDate,
+                      'PlanDate': this.itcPlanDate,
+                      'ActualDate': this.itcActualDate,
+                    }).then((result) {
+                      dialogTrigger(context);
+                    }).catchError((e) {
+                      print(e);
+                    });
                   },
                   child: Text(
                     'Submit',
@@ -434,21 +608,39 @@ class _ItcTcrFormState extends State<ItcTcrForm> {
       //     print('Click Floating action Button');
       //   },
       // ),
-      // floatingActionButton: FloatingActionButton.extended(
-      //   icon: Icon(
-      //     Icons.save,
-      //     size: 35.0,
-      //   ),
-      //   label: Text(
-      //     'SAVE',
-      //     style: TextStyle(
-      //       fontSize: 20.0,
-      //     ),
-      //   ),
-      //   onPressed: () {
-      //     print('Click Floating action Button');
-      //   },
-      // ),
+
+      floatingActionButton: FloatingActionButton.extended(
+        icon: Icon(
+          Icons.save,
+          size: 35.0,
+        ),
+        label: Text(
+          'SAVE',
+          style: TextStyle(
+            fontSize: 20.0,
+          ),
+        ),
+        onPressed: () {
+          print('Click Floating action Button');
+          Navigator.of(context).pop();
+          crudObj.addData({
+            // ใส่ข้อมูลใน column ชื่อ column เราตั้งจากตรงนี้ได้เลย
+            'Project': this.itcProject,
+            'ITC_No': this.itcITCNo,
+            'JobType': this.itcJobType,
+            'JobName': this.itcJobName,
+            'Location': this.itcLocation,
+            'GridLine': this.itcGridLine,
+            'Date': this.itcDate,
+            'PlanDate': this.itcPlanDate,
+            'ActualDate': this.itcActualDate,
+          }).then((result) {
+            dialogTrigger(context);
+          }).catchError((e) {
+            print(e);
+          });
+        },
+      ),
     );
   }
 }

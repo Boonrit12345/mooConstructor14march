@@ -1,8 +1,10 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:mooconstructor14march/page/itctcrform.dart';
 
 import 'package:mooconstructor14march/utility/crud.dart';
 
@@ -13,61 +15,28 @@ class DashboardPage extends StatefulWidget {
 
 class _DashboardPageState extends State<DashboardPage> {
   // Explicit
-  String carModel;
-  String carColor;
+  Widget appBarTitle = Text('ITC List');
+  Icon actionIcon = Icon(
+    Icons.search,
+    size: 30.0,
+    color: Colors.white,
+  );
+
+  String itcProject; // ชื่อโครงการ
+  String itcITCNo; // ITC No
+  String itcJobType; // ประเภทงาน (โครงสร้าง, สถาปัตยกรรม, งานระบบ)
+  String itcJobName; // ชื่องาน
+  String itcLocation; // บริเวณ
+  String itcGridLine; // กริดไลน์
+  String itcDate; // วันที่ส่งเอกสาร
+  String itcPlanDate; // วันที่ตามแผนงาน
+  String itcActualDate; // วันที่ทำจริง
 
   // QuerySnapshot cars;
   var cars;
 
   crudMedthods crudObj = new crudMedthods();
 // Function
-  void testTest() {
-    print('Test  ..  Test  ..  Test  ..  Test  ..  Test  ..  ');
-    // AlertDialog(
-    //   title: const Text('Please COnfirm?'),
-    //   content: const Text('Do you delete data?'),
-    //   actions: <Widget>[
-    //     FlatButton(
-    //       onPressed: null,
-    //       child: const Text('Cancel'),
-    //     ),
-    //     FlatButton(
-    //       onPressed: null,
-    //       child: const Text('OK'),
-    //     )
-    //   ],
-    // );
-  }
-
-  // enum ConfirmAction { CANCEL, ACCEPT }
-
-Future<bool> _asyncConfirmDialog(BuildContext context) async {
-  return showDialog<bool>(
-    context: context,
-    barrierDismissible: false, // user must tap button for close dialog!
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Reset settings?'),
-        content: const Text(
-            'This will reset your device to its default factory settings.'),
-        actions: <Widget>[
-          FlatButton(
-            child: const Text('CANCEL'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          ),
-          FlatButton(
-            child: const Text('ACCEPT'),
-            onPressed: () {
-              Navigator.of(context).pop();
-            },
-          )
-        ],
-      );
-    },
-  );
-}
 
 // Method
   Future<bool> addDialog(BuildContext context) async {
@@ -79,30 +48,51 @@ Future<bool> _asyncConfirmDialog(BuildContext context) async {
             title: Text('Add Data', style: TextStyle(fontSize: 15.0)),
             content: Column(
               children: <Widget>[
+                // add #1
                 TextField(
-                  decoration: InputDecoration(hintText: 'Enter car Name'),
+                  decoration: InputDecoration(
+                    hintText: 'ประเภทงาน',
+                    suffixIcon:
+                        IconButton(icon: Icon(Icons.cancel), onPressed: null),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
                   onChanged: (value) {
-                    this.carModel = value;
+                    this.itcProject = value;
                   },
                 ),
-                SizedBox(height: 5.0),
+                SizedBox(height: 15.0),
+
+                // add #2
                 TextField(
-                  decoration: InputDecoration(hintText: 'Enter car color'),
+                  decoration: InputDecoration(
+                    hintText: 'ITC no.',
+                    suffixIcon:
+                        IconButton(icon: Icon(Icons.cancel), onPressed: null),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                  ),
                   onChanged: (value) {
-                    this.carColor = value;
+                    this.itcITCNo = value;
                   },
                 ),
               ],
             ),
             actions: <Widget>[
               FlatButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Cancel')),
+              FlatButton(
                 child: Text('Add'),
                 textColor: Colors.blue,
                 onPressed: () {
                   Navigator.of(context).pop();
                   crudObj.addData({
-                    'carName': this.carModel,
-                    'color': this.carColor
+                    // ใส่ข้อมูลใน column ชื่อ column เราตั้งจากตรงนี้ได้เลย
+                    'Project': this.itcProject,
+                    'ITC_No': this.itcITCNo
                   }).then((result) {
                     dialogTrigger(context);
                   }).catchError((e) {
@@ -114,7 +104,6 @@ Future<bool> _asyncConfirmDialog(BuildContext context) async {
           );
         });
   }
-
 
   Future<bool> updateDialog(BuildContext context, selectedDoc) async {
     return showDialog(
@@ -130,16 +119,16 @@ Future<bool> _asyncConfirmDialog(BuildContext context) async {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   TextField(
-                    decoration: InputDecoration(hintText: 'Enter car Name'),
+                    decoration: InputDecoration(hintText: 'ประเภทงาน'),
                     onChanged: (value) {
-                      this.carModel = value;
+                      this.itcProject = value;
                     },
                   ),
                   SizedBox(height: 5.0),
                   TextField(
-                    decoration: InputDecoration(hintText: 'Enter car color'),
+                    decoration: InputDecoration(hintText: 'ITC no.'),
                     onChanged: (value) {
-                      this.carColor = value;
+                      this.itcITCNo = value;
                     },
                   ),
                 ],
@@ -151,9 +140,11 @@ Future<bool> _asyncConfirmDialog(BuildContext context) async {
                 textColor: Colors.blue,
                 onPressed: () {
                   Navigator.of(context).pop();
+
+                  // จุดๆ มีการ Update ข้อมูล
                   crudObj.updateData(selectedDoc, {
-                    'carName': this.carModel,
-                    'color': this.carColor
+                    'Project': this.itcProject,
+                    'ITC_No': this.itcITCNo
                   }).then((result) {
                     // dialogTrigger(context);
                   }).catchError((e) {
@@ -202,14 +193,35 @@ Future<bool> _asyncConfirmDialog(BuildContext context) async {
     return new Scaffold(
         appBar: AppBar(
           // centerTitle: true,
-          title: Text('ITC LIST'),
+          title: appBarTitle,
           actions: <Widget>[
             IconButton(
-              icon: Icon(
-                Icons.add,
-                size: 35.0,
-              ),
+              icon: actionIcon,
               onPressed: () {
+                setState(() {
+                  if (this.actionIcon.icon == Icons.search) {
+                    this.actionIcon = Icon(Icons.close);
+                    this.appBarTitle = TextField(
+                      style: TextStyle(color: Colors.white),
+                      decoration: InputDecoration(
+                          hintText: 'Search...',
+                          hintStyle: TextStyle(color: Colors.white),
+                          prefixIcon: Icon(
+                            Icons.search,
+                            color: Colors.white,
+                          )),
+                    );
+                  } else {
+                    this.actionIcon = Icon(Icons.search);
+                    this.appBarTitle = Text('ITC List');
+                  }
+                });
+              },
+            ),
+            IconButton(
+              icon: Icon(Icons.add, size: 30.0),
+              onPressed: () {
+                // เพิ่มข้อมูล
                 addDialog(context);
               },
             ),
@@ -218,9 +230,10 @@ Future<bool> _asyncConfirmDialog(BuildContext context) async {
               child: IconButton(
                 icon: Icon(
                   Icons.refresh,
-                  size: 35.0,
+                  size: 30.0,
                 ),
                 onPressed: () {
+                  // Refesh Data
                   crudObj.getData().then((results) {
                     setState(() {
                       cars = results;
@@ -230,6 +243,26 @@ Future<bool> _asyncConfirmDialog(BuildContext context) async {
               ),
             )
           ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          child: Icon(
+            Icons.add,
+            size: 35.0,
+          ),
+          onPressed: () {
+            print('Click Floating action Button');
+            //
+            // Goto page ITC & TCR Form
+            MaterialPageRoute route =
+                MaterialPageRoute(builder: (BuildContext context) {
+              return ItcTcrForm(); // =====>>>> ITC Form สำหรับเพิ่มข้อมูล
+            });
+            //
+            // กดย้อนกลับได้
+            Navigator.of(context).push(route);
+            //
+            //
+          },
         ),
         body: _carList());
   }
@@ -264,8 +297,19 @@ Future<bool> _asyncConfirmDialog(BuildContext context) async {
                 return Column(
                   children: <Widget>[
                     new ListTile(
-                      title: Text(snapshot.data.documents[i].data['carName']),
-                      subtitle: Text(snapshot.data.documents[i].data['color']),
+                      title: Text(
+                        snapshot.data.documents[i].data['Project'],
+                        style: TextStyle(fontSize: 17.0),
+                      ),
+                      subtitle: Text(snapshot.data.documents[i].data['ITC_No']),
+                      // subtitle: Text(snapshot.data.documents[i].documentID),
+                      trailing: Chip(
+                        label: Text(
+                          'new',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        backgroundColor: Colors.redAccent,
+                      ),
                       leading: CircleAvatar(
                         radius: 30.0,
                         backgroundColor: Colors.blue[50],
@@ -276,11 +320,14 @@ Future<bool> _asyncConfirmDialog(BuildContext context) async {
                       ),
                       // trailing: ,
                       onTap: () {
+                        // จุดนี้ต้องการ ดึงค่าไปใส่ textField ก่อนแล้วแก้ไขข้อความเดิม
+                        print('snapshot.data.documents[i].documentID =');
+                        print(snapshot.data.documents[i].documentID);
                         updateDialog(
                             context, snapshot.data.documents[i].documentID);
                       },
                       onLongPress: () {
-                        // 
+                        // จุดๆ นี้ ต้องการการยืนยันก่อนการลบ
                         crudObj
                             .deleteData(snapshot.data.documents[i].documentID);
                       },
@@ -294,7 +341,7 @@ Future<bool> _asyncConfirmDialog(BuildContext context) async {
         },
       );
     } else {
-      return Center(child: Text('Loading, Please wait..'));
+      // return Text('Loading, Please wait..');  /// Error
     }
   }
 }
