@@ -151,6 +151,42 @@ class _DashboardPageState extends State<DashboardPage> {
                     print(e);
                   });
                 },
+              ),
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Cancel'),
+              )
+            ],
+          );
+        });
+  }
+
+  Future<bool> comfirmDalete(BuildContext context, selectedDoc) async {
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Delete Data ?', style: TextStyle(fontSize: 15.0)),
+            content: Text('Please comfirm to delete data!'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Delete'),
+                textColor: Colors.blue,
+                onPressed: () {
+                  Navigator.of(context).pop();
+
+                  // จุดๆ นี้ มีการลบข้อมูล
+                  crudObj.deleteData(selectedDoc);
+                },
+              ),
+              FlatButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Cancel'),
               )
             ],
           );
@@ -328,8 +364,29 @@ class _DashboardPageState extends State<DashboardPage> {
                       },
                       onLongPress: () {
                         // จุดๆ นี้ ต้องการการยืนยันก่อนการลบ
-                        crudObj
-                            .deleteData(snapshot.data.documents[i].documentID);
+                        comfirmDalete(
+                            context, snapshot.data.documents[i].documentID);
+
+                        // AlertDialog(
+                        //   title: Text('คุณกำลังลบข้อมูล'),
+                        //   content: Text('กรุณายืนยันการลบข้อมูล'),
+                        //   actions: <Widget>[
+                        //     FlatButton(
+                        //       onPressed: () {
+                        //         Navigator.of(context).pop();
+                        //         crudObj.deleteData(
+                        //             snapshot.data.documents[i].documentID);
+                        //       },
+                        //       child: Text('ยืนยัน'),
+                        //     ),
+                        //     FlatButton(
+                        //       onPressed: () {
+                        //         Navigator.of(context).pop();
+                        //       },
+                        //       child: Text('ยกเลิก'),
+                        //     )
+                        //   ],
+                        // );
                       },
                     ),
                     Divider(color: Colors.grey),
