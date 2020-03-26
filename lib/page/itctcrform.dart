@@ -595,11 +595,36 @@ class _ItcTcrFormState extends State<ItcTcrForm> {
         centerTitle: true,
         title: Text('Create form : ITC & TCR'),
         actions: <Widget>[
-          // PopupMenuButton<String>(
-          //   onSelected: null,
-          //   itemBuilder: (BuildContext contexts){
-          //     return Constants.ch
-          //   }),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0.0, 0.0, 25.0, 0.0),
+            child: IconButton(
+              icon: Icon(
+                Icons.save,
+                size: 34.0,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                print('Click IconButton');
+                Navigator.of(context).pop();
+                crudObj.addData({
+                  // ใส่ข้อมูลใน column ชื่อ column เราตั้งจากตรงนี้ได้เลย
+                  'Project': this.itcProject,
+                  'ITC_No': this.itcITCNo,
+                  'JobType': this.itcJobType,
+                  'JobName': this.itcJobName,
+                  'Location': this.itcLocation,
+                  'GridLine': this.itcGridLine,
+                  'Date': this.itcDate,
+                  'PlanDate': this.itcPlanDate,
+                  'ActualDate': this.itcActualDate,
+                }).then((result) {
+                  dialogTrigger(context);
+                }).catchError((e) {
+                  print(e);
+                });
+              },
+            ),
+          )
         ],
       ),
       // floatingActionButton: FloatingActionButton(
@@ -609,38 +634,41 @@ class _ItcTcrFormState extends State<ItcTcrForm> {
       //   },
       // ),
 
-      floatingActionButton: FloatingActionButton.extended(
-        icon: Icon(
-          Icons.save,
-          size: 35.0,
-        ),
-        label: Text(
-          'SAVE',
-          style: TextStyle(
-            fontSize: 20.0,
-          ),
-        ),
-        onPressed: () {
-          print('Click Floating action Button');
-          Navigator.of(context).pop();
-          crudObj.addData({
-            // ใส่ข้อมูลใน column ชื่อ column เราตั้งจากตรงนี้ได้เลย
-            'Project': this.itcProject,
-            'ITC_No': this.itcITCNo,
-            'JobType': this.itcJobType,
-            'JobName': this.itcJobName,
-            'Location': this.itcLocation,
-            'GridLine': this.itcGridLine,
-            'Date': this.itcDate,
-            'PlanDate': this.itcPlanDate,
-            'ActualDate': this.itcActualDate,
-          }).then((result) {
-            dialogTrigger(context);
-          }).catchError((e) {
-            print(e);
-          });
-        },
-      ),
+      // floatingActionButton: FloatingActionButton.extended(
+      //   icon: Icon(
+      //     Icons.save,
+      //     size: 35.0,
+      //   ),
+      //   label: Text(
+      //     'SAVE',
+      //     style: TextStyle(
+      //       fontSize: 20.0,
+      //     ),
+      //   ),
+      // onPressed: () {
+      //   print('Click Floating action Button');
+      //   Navigator.of(context).pop();
+      //   crudObj.addData({
+      //     // ใส่ข้อมูลใน column ชื่อ column เราตั้งจากตรงนี้ได้เลย
+      //     'Project': this.itcProject,
+      //     'ITC_No': this.itcITCNo,
+      //     'JobType': this.itcJobType,
+      //     'JobName': this.itcJobName,
+      //     'Location': this.itcLocation,
+      //     'GridLine': this.itcGridLine,
+      //     'Date': this.itcDate,
+      //     'PlanDate': this.itcPlanDate,
+      //     'ActualDate': this.itcActualDate,
+      //   }).then((result) {
+      //     dialogTrigger(context);
+      //   }).catchError((e) {
+      //     print(e);
+      //   });
+      // },
+
+      // ),
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }
 }

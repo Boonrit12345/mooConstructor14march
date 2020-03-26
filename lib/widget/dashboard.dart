@@ -5,8 +5,17 @@ import 'package:flutter/material.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mooconstructor14march/page/itctcrform.dart';
+import 'package:mooconstructor14march/page/itctcrformchecklist.dart';
+// import 'package:mooconstructor14march/utility/custom_dialog.dart';
 
 import 'package:mooconstructor14march/utility/crud.dart';
+import 'package:mooconstructor14march/utility/custom_dialog_red.dart';
+
+class TimeValue {
+  final int _key;
+  final String _value;
+  TimeValue(this._key, this._value);
+}
 
 class DashboardPage extends StatefulWidget {
   @override
@@ -18,7 +27,7 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget appBarTitle = Text('ITC List');
   Icon actionIcon = Icon(
     Icons.search,
-    size: 30.0,
+    size: 35.0,
     color: Colors.white,
   );
 
@@ -36,9 +45,130 @@ class _DashboardPageState extends State<DashboardPage> {
   var cars;
 
   crudMedthods crudObj = new crudMedthods();
+
+  int _currentTimeValue = 1;
+
+  final _buttonOptions = [
+    TimeValue(1, "30 minutes"),
+    TimeValue(2, "1 hour"),
+    TimeValue(3, "2 hours"),
+    TimeValue(4, "4 hours"),
+    TimeValue(5, "8 hours"),
+    TimeValue(6, "12 hours"),
+  ];
+
 // Function
 
 // Method
+
+// Fantacy AlertDialog and test on LongPress in ListView
+  void showCustomDialogWithImage(BuildContext context) {
+    Dialog dialogWithImage = Dialog(
+      child: Container(
+        height: 300.0,
+        width: 300.0,
+        child: Column(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.all(12),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(color: Colors.grey[300]),
+              child: Text(
+                "Dialog With Image",
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600),
+              ),
+            ),
+            Container(
+              height: 200,
+              width: 300,
+              child: Image.asset(
+                'images/boss-icon.png',
+                fit: BoxFit.scaleDown,
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: <Widget>[
+                RaisedButton(
+                  color: Colors.blue,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    'Okay',
+                    style: TextStyle(fontSize: 18.0, color: Colors.white),
+                  ),
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                RaisedButton(
+                  color: Colors.red,
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    'Cancel!',
+                    style: TextStyle(fontSize: 18.0, color: Colors.white),
+                  ),
+                )
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+
+    showDialog(
+        context: context, builder: (BuildContext context) => dialogWithImage);
+  }
+
+//  เรียกใช้ในส่วน LongPress on Listview
+  Widget costumAlertDialoadContainer() {
+    return Container(
+      height: 300.0, // Change as per your requirement
+      width: 300.0, // Change as per your requirement
+      child: ListView(
+        padding: EdgeInsets.all(8.0),
+        children: _buttonOptions
+            .map((timeValue) => RadioListTile(
+                  groupValue: _currentTimeValue,
+                  title: Text(timeValue._value),
+                  value: timeValue._key,
+                  onChanged: (val) {
+                    setState(() {
+                      debugPrint('VAL = $val');
+                      _currentTimeValue = val;
+                    });
+                  },
+                ))
+            .toList(),
+      ),
+    );
+  }
+
+// สร้าง AlertDialog แบบมี listview ให้เลือก
+// ต่อไปเราจะสร้างตัวรับค่า enumlist จาก firebase มาแทนค่า
+  Widget setupAlertDialoadContainer() {
+    return Container(
+      height: 300.0, // Change as per your requirement
+      width: 300.0, // Change as per your requirement
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: 5,
+        itemBuilder: (BuildContext context, int index) {
+          return ListTile(
+            title: Text('Gujarat, India'),
+          );
+        },
+      ),
+    );
+  }
+
   Future<bool> addDialog(BuildContext context) async {
     return showDialog(
         context: context,
@@ -169,11 +299,23 @@ class _DashboardPageState extends State<DashboardPage> {
         barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Delete Data ?', style: TextStyle(fontSize: 15.0)),
-            content: Text('Please comfirm to delete data!'),
+            backgroundColor: Colors.white,
+            title: Text('คุณกำลังจะลบข้อมูล ?',
+                style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.redAccent)),
+            content: Text(
+              'กรุณายืนยัน !',
+              style: TextStyle(color: Colors.redAccent),
+            ),
             actions: <Widget>[
               FlatButton(
-                child: Text('Delete'),
+                child: Text('ลบ',
+                    style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.redAccent)),
                 textColor: Colors.blue,
                 onPressed: () {
                   Navigator.of(context).pop();
@@ -186,7 +328,11 @@ class _DashboardPageState extends State<DashboardPage> {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text('Cancel'),
+                child: Text('    ยกเลิก',
+                    style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.redAccent)),
               )
             ],
           );
@@ -254,33 +400,36 @@ class _DashboardPageState extends State<DashboardPage> {
                 });
               },
             ),
-            IconButton(
-              icon: Icon(Icons.add, size: 30.0),
-              onPressed: () {
-                // เพิ่มข้อมูล
-                addDialog(context);
-              },
-            ),
+            // IconButton(
+            //   icon: Icon(Icons.add, size: 30.0),
+            //   onPressed: () {
+            //     // เพิ่มข้อมูล
+            //     addDialog(context);
+            //   },
+            // ),
             Padding(
               padding: const EdgeInsets.fromLTRB(0.0, 0.0, 15.0, 0.0),
-              child: IconButton(
-                icon: Icon(
-                  Icons.refresh,
-                  size: 30.0,
-                ),
-                onPressed: () {
-                  // Refesh Data
-                  crudObj.getData().then((results) {
-                    setState(() {
-                      cars = results;
-                    });
-                  });
-                },
-              ),
+
+              // Refesh Button
+              // child: IconButton(
+              //   icon: Icon(
+              //     Icons.refresh,
+              //     size: 30.0,
+              //   ),
+              //   onPressed: () {
+              //     // Refesh Data
+              //     crudObj.getData().then((results) {
+              //       setState(() {
+              //         cars = results;
+              //       });
+              //     });
+              //   },
+              // ),
             )
           ],
         ),
         floatingActionButton: FloatingActionButton(
+          tooltip: 'เพิ่มเอกสาร ITC',
           child: Icon(
             Icons.add,
             size: 35.0,
@@ -300,6 +449,8 @@ class _DashboardPageState extends State<DashboardPage> {
             //
           },
         ),
+        // ให้ปุ่มลอยอยู่กลางหน้า
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
         body: _carList());
   }
 
@@ -357,36 +508,57 @@ class _DashboardPageState extends State<DashboardPage> {
                       // trailing: ,
                       onTap: () {
                         // จุดนี้ต้องการ ดึงค่าไปใส่ textField ก่อนแล้วแก้ไขข้อความเดิม
-                        print('snapshot.data.documents[i].documentID =');
-                        print(snapshot.data.documents[i].documentID);
-                        updateDialog(
-                            context, snapshot.data.documents[i].documentID);
+                            // print('snapshot.data.documents[i].documentID =');
+                            // print(snapshot.data.documents[i].documentID);
+                            // updateDialog(
+                            //     context, snapshot.data.documents[i].documentID);
+
+                        // route ===>>> ITC TCR FORM CHECKLIST
+                        print('Click ITC & TCR LIST');
+                        //
+                        // Goto page ITC & TCR Form
+                        MaterialPageRoute route =
+                            MaterialPageRoute(builder: (BuildContext context) {
+                          return ItcTcrCheckListPage(post: snapshot.data.documents[i]);
+                           // =====>>>> ITC & TCR CHECK LIST
+                        });
+                        //
+                        // กดย้อนกลับได้
+                        Navigator.of(context).push(route);
+                        //
+                        //
                       },
                       onLongPress: () {
-                        // จุดๆ นี้ ต้องการการยืนยันก่อนการลบ
+                        // ทดลอง Dialog สวยๆ
+                        //     showDialog(
+                        //   context: context,
+                        //   builder: (BuildContext context) => CustomDialogRed(
+                        //     title: "Would you like to delete an ITC document ?",
+                        //     description:
+                        //         "With an account, your data will be securely saved, allowing you to access it from multiple devices.",
+                        //     primaryButtonText: "Confirm to delete",
+                        //     primaryButtonRoute: "", // "/signUp"
+                        //     secondaryButtonText: "Maybe Later",
+                        //     secondaryButtonRoute: "", // "/home"
+                        //   ),
+                        // );
+                        // จุดๆ นี้ ต้องการการยืนยันก่อนการลบ (ใส่แล้ว ชื่อ confirmDalete())
                         comfirmDalete(
                             context, snapshot.data.documents[i].documentID);
 
-                        // AlertDialog(
-                        //   title: Text('คุณกำลังลบข้อมูล'),
-                        //   content: Text('กรุณายืนยันการลบข้อมูล'),
-                        //   actions: <Widget>[
-                        //     FlatButton(
-                        //       onPressed: () {
-                        //         Navigator.of(context).pop();
-                        //         crudObj.deleteData(
-                        //             snapshot.data.documents[i].documentID);
-                        //       },
-                        //       child: Text('ยืนยัน'),
-                        //     ),
-                        //     FlatButton(
-                        //       onPressed: () {
-                        //         Navigator.of(context).pop();
-                        //       },
-                        //       child: Text('ยกเลิก'),
-                        //     )
-                        //   ],
-                        // );
+                        // ส่วนนี้ทำให้โชว์ Dialog มาให้เลือกแล้ว
+                        // นำไปประยุกต์ ในการเลือกข้อมูลแบบ enum ได้
+                        // showDialog(
+                        //     context: context,
+                        //     builder: (BuildContext context) {
+                        //       return AlertDialog(
+                        //         title: Text('Country List'),
+                        //         content: costumAlertDialoadContainer(),
+
+                        //         // actions: <Widget>[],
+                        //       );
+                        //     });
+                        //จบ showDialog
                       },
                     ),
                     Divider(color: Colors.grey),

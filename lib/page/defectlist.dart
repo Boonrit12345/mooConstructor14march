@@ -80,6 +80,89 @@ class _DefectListPageState extends State<DefectListPage> {
     );
   }
 
+  Widget showPopUpMenuButton() {
+    return PopupMenuButton<String>(
+      icon: Icon(Icons.add, size: 35.0),
+      itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
+        PopupMenuItem<String>(
+          value: 'one_val',
+          child: Container(
+            child: ListTile(
+              title: Text(
+                'Setting',
+                style: TextStyle(color: Colors.black, fontSize: 18.0),
+              ),
+              leading: Icon(
+                Icons.settings,
+                size: 30.0,
+              ),
+            ),
+          ),
+        ),
+        PopupMenuItem<String>(
+          value: 'two_val',
+          child: Container(
+            child: ListTile(
+              title: Text(
+                'Setting',
+                style: TextStyle(color: Colors.black, fontSize: 18.0),
+              ),
+              leading: Icon(
+                Icons.settings,
+                size: 30.0,
+              ),
+            ),
+          ),
+        ),
+
+        PopupMenuItem<String>(
+          value: 'three_val',
+          child: Container(
+            child: ListTile(
+              title: Text(
+                'Setting',
+                style: TextStyle(color: Colors.black, fontSize: 18.0),
+              ),
+              leading: Icon(
+                Icons.settings,
+                size: 30.0,
+              ),
+            ),
+          ),
+        ),
+        PopupMenuItem<String>(
+          value: 'four_val',
+          child: Container(
+            child: ListTile(
+              title: Text(
+                'Setting',
+                style: TextStyle(color: Colors.black, fontSize: 18.0),
+              ),
+              leading: Icon(
+                Icons.settings,
+                size: 30.0,
+              ),
+            ),
+          ),
+        ),
+
+
+      ],
+      onSelected: (retVal) {
+        print(retVal);
+        if (retVal == 'one_val') {
+          print('Hey one Here');
+        } else if (retVal == 'two_val') {
+          print('Hey two Here');
+        } else if (retVal == 'three_val') {
+          print('Hey three Here');
+        } else {
+          print('Hey four Here');
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -94,6 +177,7 @@ class _DefectListPageState extends State<DefectListPage> {
             padding: const EdgeInsets.fromLTRB(0.0, 0.0, 20.0, 0.0),
             child: Icon(Icons.search, size: 35.0),
           ),
+          showPopUpMenuButton(),
         ],
       ),
     );

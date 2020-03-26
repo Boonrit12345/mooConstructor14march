@@ -330,7 +330,7 @@ class CustomListTile extends StatelessWidget {
 // Page สำหรับดูรายละเอียด
 class DetailPage101 extends StatefulWidget {
   // Explicit
-  final DocumentSnapshot post; // สร้าง Object post
+  final DocumentSnapshot post; // สร้าง Object post รับค่าจากการ route มาจาก page อื่น
 
   DetailPage101({this.post}); // รับค่า Object จาก parameter DocumentSnapshot
 

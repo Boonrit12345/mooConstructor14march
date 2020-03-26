@@ -424,11 +424,40 @@ class _MyServiceState extends State<MyService> {
     );
   }
 
+  nested() {
+    return NestedScrollView(
+      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+        return <Widget>[
+          SliverAppBar(
+            expandedHeight: 200.0,
+            floating: false,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              centerTitle: true,
+              title: Text(
+                'My Project',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.0,
+                ),
+              ),
+              background: Image.asset('images/cityhorizon_header.jpg',
+              // background: Image.asset('images/fantasy-2543658.jpg',
+              fit: BoxFit.cover,),
+            ),
+          ),
+        ];
+      },
+      body: currentWidget,
+    );
+  }
+
 // ======================================================
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: currentWidget,
+      // body: currentWidget,
+      body: nested(),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
         // type: BottomNavigationBarType.fixed,
@@ -472,18 +501,11 @@ class _MyServiceState extends State<MyService> {
       //
       // show Drawer
       drawer: showDrawer(),
-      appBar: AppBar(
-        centerTitle: true, // ทำให้ title อยู่กลาง
-        title: Text('My Project'),
-        // leading: Icon(Icons.search),
-        actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0.0, 0.0, 20.0, 0.0),
-            child: Icon(Icons.search, size: 35.0),
-          ),
-          // Icon(Icons.more_vert, size: 30.0),
-        ],
-      ),
+      // appBar: AppBar(
+      //   centerTitle: true, // ทำให้ title อยู่กลาง
+      //   title: Text('My Project'),
+      //   // leading: Icon(Icons.search),
+      // ),
     );
   }
 }
