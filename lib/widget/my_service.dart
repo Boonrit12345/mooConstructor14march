@@ -1,7 +1,9 @@
+import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:mooconstructor14march/page/itc_empty_form.dart';
 import 'package:mooconstructor14march/utility/my_constant.dart';
 import 'package:mooconstructor14march/utility/my_style.dart';
 
@@ -163,6 +165,37 @@ class _MyServiceState extends State<MyService> {
     );
   }
 
+  Widget createItcEmptyForm() {
+    return Container(
+      decoration:
+          BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey))),
+      child: ListTile(
+        onTap: () {
+          // setState(() {
+          //   print('Click Inbox message');
+          //   // currentWidget = ItcEmptyFormList();
+
+          // });
+          // Navigator.of(context).pop();
+
+          MaterialPageRoute route =
+              MaterialPageRoute(builder: (BuildContext context) {
+            return ItcEmptyFormList();
+          });
+          //
+          // กดย้อนกลับได้
+          Navigator.of(context).push(route);
+        },
+        title: Text('Creat ITC Form'),
+        subtitle: Text('สร้างแบบฟอร์ม ITC'),
+        leading: Icon(
+          Icons.question_answer,
+          size: 30.0,
+        ),
+      ),
+    );
+  }
+
   Widget myInboxMessage() {
     return Container(
       decoration:
@@ -289,6 +322,7 @@ class _MyServiceState extends State<MyService> {
           myProjectList(),
           listAllProjectList(),
           myInboxMessage(),
+          createItcEmptyForm(),
           myProfile(),
           mySetting(),
           menuSignOut(),
@@ -441,9 +475,11 @@ class _MyServiceState extends State<MyService> {
                   fontSize: 16.0,
                 ),
               ),
-              background: Image.asset('images/cityhorizon_header.jpg',
-              // background: Image.asset('images/fantasy-2543658.jpg',
-              fit: BoxFit.cover,),
+              background: Image.asset(
+                'images/cityhorizon_header.jpg',
+                // background: Image.asset('images/fantasy-2543658.jpg',
+                fit: BoxFit.cover,
+              ),
             ),
           ),
         ];
@@ -476,7 +512,20 @@ class _MyServiceState extends State<MyService> {
             backgroundColor: Colors.blue,
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.notification_important),
+            // icon: Icon(Icons.notification_important),
+            icon: Column(
+              children: <Widget>[
+                Badge(
+                  child: Icon(Icons.notification_important),
+                  badgeContent: Text(
+                    '10',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  badgeColor: Colors.red,
+                  animationType: BadgeAnimationType.slide,
+                ),
+              ],
+            ),
             title: Text('รออนุมัติ'),
             backgroundColor: Colors.blue,
           ),

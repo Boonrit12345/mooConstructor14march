@@ -373,105 +373,120 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        appBar: AppBar(
-          // centerTitle: true,
-          title: appBarTitle,
-          actions: <Widget>[
-            IconButton(
-              icon: actionIcon,
-              onPressed: () {
-                setState(() {
-                  if (this.actionIcon.icon == Icons.search) {
-                    this.actionIcon = Icon(Icons.close);
-                    this.appBarTitle = TextField(
-                      style: TextStyle(color: Colors.white),
-                      decoration: InputDecoration(
-                          hintText: 'Search...',
-                          hintStyle: TextStyle(color: Colors.white),
-                          prefixIcon: Icon(
-                            Icons.search,
-                            color: Colors.white,
-                          )),
-                    );
-                  } else {
-                    this.actionIcon = Icon(Icons.search);
-                    this.appBarTitle = Text('ITC List');
-                  }
-                });
-              },
-            ),
-            // IconButton(
-            //   icon: Icon(Icons.add, size: 30.0),
+      appBar: AppBar(
+        // centerTitle: true,
+        title: appBarTitle,
+        actions: <Widget>[
+          IconButton(
+            icon: actionIcon,
+            onPressed: () {
+              setState(() {
+                if (this.actionIcon.icon == Icons.search) {
+                  this.actionIcon = Icon(Icons.close);
+                  this.appBarTitle = TextField(
+                    style: TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                        hintText: 'Search...',
+                        hintStyle: TextStyle(color: Colors.white),
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: Colors.white,
+                        )),
+                  );
+                } else {
+                  this.actionIcon = Icon(Icons.search);
+                  this.appBarTitle = Text('ITC List');
+                }
+              });
+            },
+          ),
+          // IconButton(
+          //   icon: Icon(Icons.add, size: 30.0),
+          //   onPressed: () {
+          //     // เพิ่มข้อมูล
+          //     addDialog(context);
+          //   },
+          // ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0.0, 0.0, 15.0, 0.0),
+
+            // Refesh Button
+            // child: IconButton(
+            //   icon: Icon(
+            //     Icons.refresh,
+            //     size: 30.0,
+            //   ),
             //   onPressed: () {
-            //     // เพิ่มข้อมูล
-            //     addDialog(context);
+            //     // Refesh Data
+            //     crudObj.getData().then((results) {
+            //       setState(() {
+            //         cars = results;
+            //       });
+            //     });
             //   },
             // ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0.0, 0.0, 15.0, 0.0),
+          )
+        ],
+      ),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          // FloatingActionButton(
+          //   tooltip: 'เพิ่มเอกสาร ITC',
+          //   child: Icon(
+          //     Icons.note_add,
+          //     size: 35.0,
+          //   ),
+          //   onPressed: () {
+          //     print('Click Floating action Button');
+          //     //
 
-              // Refesh Button
-              // child: IconButton(
-              //   icon: Icon(
-              //     Icons.refresh,
-              //     size: 30.0,
-              //   ),
-              //   onPressed: () {
-              //     // Refesh Data
-              //     crudObj.getData().then((results) {
-              //       setState(() {
-              //         cars = results;
-              //       });
-              //     });
-              //   },
-              // ),
-            )
-          ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          tooltip: 'เพิ่มเอกสาร ITC',
-          child: Icon(
-            Icons.add,
-            size: 35.0,
+          //     MaterialPageRoute route =
+          //         MaterialPageRoute(builder: (BuildContext context) {
+          //       return ItcTcrForm();
+          //     });
+          //     //
+          //     // กดย้อนกลับได้
+          //     Navigator.of(context).push(route);
+          //     //
+          //     //
+          //   },
+          // ),
+          // SizedBox(
+          //   width: 30,
+          // ),
+          FloatingActionButton(
+            tooltip: 'เพิ่มเอกสาร ITC',
+            child: Icon(
+              Icons.add,
+              size: 35.0,
+            ),
+            onPressed: () {
+              print('Click Floating action Button');
+              //
+              // Goto page ITC & TCR Form
+              MaterialPageRoute route =
+                  MaterialPageRoute(builder: (BuildContext context) {
+                return ItcTcrForm(); // =====>>>> ITC Form สำหรับเพิ่มข้อมูล
+              });
+              //
+              // กดย้อนกลับได้
+              Navigator.of(context).push(route);
+              //
+              //
+            },
           ),
-          onPressed: () {
-            print('Click Floating action Button');
-            //
-            // Goto page ITC & TCR Form
-            MaterialPageRoute route =
-                MaterialPageRoute(builder: (BuildContext context) {
-              return ItcTcrForm(); // =====>>>> ITC Form สำหรับเพิ่มข้อมูล
-            });
-            //
-            // กดย้อนกลับได้
-            Navigator.of(context).push(route);
-            //
-            //
-          },
-        ),
-        // ให้ปุ่มลอยอยู่กลางหน้า
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        body: _carList());
+        ],
+      ),
+      // ให้ปุ่มลอยอยู่กลางหน้า
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      body: _carList1(),
+    );
   }
 
-  // Widget _carList() {
-  //   if (cars != null) {
-  //     return ListView.builder(
-  //       itemCount: cars.documents.length,
-  //       padding: EdgeInsets.all(5.0),
-  //       itemBuilder: (context, i) {
-  //         return new ListTile(
-  //           title: Text(cars.documents[i].data['carName']),
-  //           subtitle: Text(cars.documents[i].data['color']),
-  //         );
-  //       },
-  //     );
-  //   } else {
-  //     return Center(child: Text('Loading, Please wait..'));
-  //   }
-  // }
 
-  Widget _carList() {
+
+  Widget _carList1() {
     if (cars != null) {
       return StreamBuilder(
         stream: cars,
@@ -508,10 +523,10 @@ class _DashboardPageState extends State<DashboardPage> {
                       // trailing: ,
                       onTap: () {
                         // จุดนี้ต้องการ ดึงค่าไปใส่ textField ก่อนแล้วแก้ไขข้อความเดิม
-                            // print('snapshot.data.documents[i].documentID =');
-                            // print(snapshot.data.documents[i].documentID);
-                            // updateDialog(
-                            //     context, snapshot.data.documents[i].documentID);
+                        // print('snapshot.data.documents[i].documentID =');
+                        // print(snapshot.data.documents[i].documentID);
+                        // updateDialog(
+                        //     context, snapshot.data.documents[i].documentID);
 
                         // route ===>>> ITC TCR FORM CHECKLIST
                         print('Click ITC & TCR LIST');
@@ -519,8 +534,9 @@ class _DashboardPageState extends State<DashboardPage> {
                         // Goto page ITC & TCR Form
                         MaterialPageRoute route =
                             MaterialPageRoute(builder: (BuildContext context) {
-                          return ItcTcrCheckListPage(post: snapshot.data.documents[i]);
-                           // =====>>>> ITC & TCR CHECK LIST
+                          return ItcTcrCheckListPage(
+                              post: snapshot.data.documents[i]);
+                          // =====>>>> ITC & TCR CHECK LIST
                         });
                         //
                         // กดย้อนกลับได้
