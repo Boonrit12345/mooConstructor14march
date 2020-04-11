@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mooconstructor14march/daily_report/daily_report_list.dart';
 import 'package:mooconstructor14march/page/defectlist.dart';
 import 'package:mooconstructor14march/page/ItcTcrListPage.dart';
 import 'package:mooconstructor14march/widget/dashboard.dart';
@@ -58,10 +59,21 @@ class _ProjMenuListState extends State<ProjMenuList> {
       key: _scaffoldKey,
       body: ListView(
         children: <Widget>[
-          CustomListTile(Icons.assessment, 'Daily Report',
-              'ใบรายงานการทำงานประจำวัน', () => {_showSnackBar()}),
-          CustomListTile(Icons.assignment, 'Daily Request',
-              'ใบขออนุมัติทำงานประจำวัน', () => {_showSnackBar()}),
+          // Daily Report
+          CustomListTile(
+              Icons.assessment, 'Daily Report', 'ใบรายงานการทำงานประจำวัน', () {
+            MaterialPageRoute route =
+                MaterialPageRoute(builder: (BuildContext context) {
+              return DailyReportList(); // =====>>>> ITC & TCR List
+            });
+            Navigator.of(context).push(route); // กดย้อนกลับได้
+          }),
+          // Daily Request
+          CustomListTile(
+              Icons.assignment, 'Daily Request', 'ใบขออนุมัติทำงานประจำวัน',
+              () {
+            _showSnackBar();
+          }),
           CustomListTile(Icons.format_paint, 'Material Approval',
               'ใบขออนุมัติวัสดุเพื่อใช้งาน', () => {_showSnackBar()}),
           CustomListTile(Icons.format_shapes, 'Shop Drawing Approval',
@@ -73,18 +85,11 @@ class _ProjMenuListState extends State<ProjMenuList> {
           CustomListTile(
               Icons.check_circle, 'ITC & TCR', 'การตรวจสอบและการทดสอบคุณภาพ',
               () {
-            print('Click ITC & TCR');
-            //
-            // Goto page ItcTcrListPage
             MaterialPageRoute route =
                 MaterialPageRoute(builder: (BuildContext context) {
               return DashboardPage(); // =====>>>> ITC & TCR List
             });
-            //
-            // กดย้อนกลับได้
-            Navigator.of(context).push(route);
-            //
-            //
+            Navigator.of(context).push(route); // กดย้อนกลับได้
           }),
           CustomListTile(
               Icons.report, 'Defect List', 'ใบแจ้งงานที่มีข้อบกพร่อง', () {

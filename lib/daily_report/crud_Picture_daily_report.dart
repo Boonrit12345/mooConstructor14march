@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class crudDailyReportMedthods {
+class crudPictureDailyReportMedthods {
   bool isLoggedIn() {
     if (FirebaseAuth.instance.currentUser() != null) {
       return true;
@@ -15,7 +15,7 @@ class crudDailyReportMedthods {
   // LOG IN CHECK
   Future<void> addData(carData) async {
     if (isLoggedIn()) {
-      Firestore.instance.collection('DailyReport').add(carData).catchError((e) {
+      Firestore.instance.collection('ImageDailyReport').add(carData).catchError((e) {
         print(e);
       });
     } else {
@@ -27,8 +27,8 @@ class crudDailyReportMedthods {
 // CREATE DATA
   getData() async {
     return await Firestore.instance
-        .collection('DailyReport')
-        .orderBy('color', descending: true) // เรียงข้อมูลมากไปน้อย ตาม column field
+        .collection('ImageDailyReport')
+        .orderBy('dateImage', descending: true) // เรียงข้อมูลมากไปน้อย ตาม column field
         .snapshots();
 
     // return await Firestore.instance
@@ -42,7 +42,7 @@ class crudDailyReportMedthods {
 // UPDATE
   updateData(selectedDoc, newValues) {
     Firestore.instance
-        .collection('DailyReport')
+        .collection('ImageDailyReport')
         .document(selectedDoc)
         .updateData(newValues) // คำสั่ง update
         .catchError((e) {
@@ -53,7 +53,7 @@ class crudDailyReportMedthods {
 //  DELETE
   deleteData(docId) {
     Firestore.instance
-        .collection('DailyReport')
+        .collection('ImageDailyReport')
         .document(docId)
         .delete()
         .catchError((e) {

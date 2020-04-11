@@ -33,6 +33,12 @@ dependencies:
   auto_size_text: ^2.1.0
   badges: ^1.1.1
   flutter_plugin_pdf_viewer: ^1.0.7
+  image_cropper: ^1.2.1
+  bezier_chart: "^1.0.6"
+  http: ^0.12.0+4
+  file_picker: ^1.1.1
+
+  
 
 dev_dependencies:
   flutter_test:
