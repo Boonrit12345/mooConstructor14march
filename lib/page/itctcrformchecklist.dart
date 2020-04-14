@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:mooconstructor14march/page/itc_a_page.dart';
-import 'package:mooconstructor14march/page/itc_b_page.dart';
 import 'package:mooconstructor14march/page/itc_c_page.dart';
 
 import 'package:mooconstructor14march/utility/my_style.dart';

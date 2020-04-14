@@ -1,9 +1,10 @@
 import 'package:badges/badges.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+
 import 'package:flutter/material.dart';
 import 'package:mooconstructor14march/page/itc_empty_form.dart';
+import 'package:mooconstructor14march/page/itctemplate.dart';
 import 'package:mooconstructor14march/utility/my_constant.dart';
 import 'package:mooconstructor14march/utility/my_style.dart';
 
@@ -171,20 +172,19 @@ class _MyServiceState extends State<MyService> {
           BoxDecoration(border: Border(bottom: BorderSide(color: Colors.grey))),
       child: ListTile(
         onTap: () {
-          // setState(() {
-          //   print('Click Inbox message');
-          //   // currentWidget = ItcEmptyFormList();
+          
 
+          // MaterialPageRoute route =
+          //     MaterialPageRoute(builder: (BuildContext context) {
+          //   return ItcEmptyFormList();
           // });
-          // Navigator.of(context).pop();
-
+          Navigator.of(context).pop();
           MaterialPageRoute route =
               MaterialPageRoute(builder: (BuildContext context) {
-            return ItcEmptyFormList();
+            return ItcTemplate();
           });
-          //
-          // กดย้อนกลับได้
           Navigator.of(context).push(route);
+          
         },
         title: Text('Creat ITC Form'),
         subtitle: Text('สร้างแบบฟอร์ม ITC'),
@@ -313,11 +313,13 @@ class _MyServiceState extends State<MyService> {
     return levelLogin == null ? Text('Level') : Text(levelLogin);
   }
 
+
+
   Widget showDrawer() {
     return Drawer(
       child: ListView(
         children: <Widget>[
-          // DrawerHeader(child: null),
+          
           showHead(),
           myProjectList(),
           listAllProjectList(),

@@ -27,6 +27,13 @@ class MyStyle {
     color: Color.fromARGB(0xff, 0x00, 0x4c, 0x8c),
   );
 
+  Widget showProcess(){
+    return Center(
+      child:  CircularProgressIndicator(),
+    );
+  }
+
   // Method
+  MyStyle();
 
 }
