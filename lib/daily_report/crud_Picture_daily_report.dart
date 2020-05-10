@@ -15,7 +15,10 @@ class crudPictureDailyReportMedthods {
   // CREATE DATA
   Future<void> addData(carData) async {
     if (isLoggedIn()) {
-      Firestore.instance.collection('ImageDailyReport').add(carData).catchError((e) {
+      Firestore.instance
+          .collection('ImageDailyReport')
+          .add(carData)
+          .catchError((e) {
         print(e);
       });
     } else {
@@ -30,12 +33,10 @@ class crudPictureDailyReportMedthods {
         .collection('DailyReport')
         .document(selectedDoc)
         .collection('DailyImage')
-        .orderBy('dateImage', descending: true) // เรียงข้อมูลมากไปน้อย ตาม column field
+        .orderBy('dateImage',
+            descending: true) // เรียงข้อมูลมากไปน้อย ตาม column field
         .snapshots();
   }
-
-
-  
 
 // UPDATE
   updateData(selectedDoc, newValues) {
@@ -60,7 +61,7 @@ class crudPictureDailyReportMedthods {
   }
 
 //  DELETE Daily Progress
-  deleteDataDailyProgress(selectedDoc,docId) {
+  deleteDataDailyProgress(selectedDoc, docId) {
     Firestore.instance
         .collection('DailyReport')
         .document(selectedDoc)
@@ -72,8 +73,6 @@ class crudPictureDailyReportMedthods {
     });
     print('Work in ===>> deleteDataDailyProgress');
   }
-
-
 }
 
 // จบ
