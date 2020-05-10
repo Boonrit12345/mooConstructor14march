@@ -30,7 +30,7 @@ class crudDailyReportMedthods {
   }
 
 // เพิ่มรูปถ่ายประจำวัน
-  createDailyImage(selectedDoc,carData) async {
+  createDailyImage(selectedDoc, carData) async {
     Firestore.instance
         .collection('DailyReport')
         .document(selectedDoc)
@@ -42,7 +42,7 @@ class crudDailyReportMedthods {
   }
 
 // เพิ่มรายงานความก้าวหน้า
-  createDailyProgress(selectedDoc,carData) async {
+  createDailyProgress(selectedDoc, carData) async {
     Firestore.instance
         .collection('DailyReport')
         .document(selectedDoc)
@@ -54,7 +54,7 @@ class crudDailyReportMedthods {
   }
 
 // เพิ่มรายงานพนักงาน
-  createDailyStaff(selectedDoc,carData) async {
+  createDailyStaff(selectedDoc, carData) async {
     Firestore.instance
         .collection('DailyReport')
         .document(selectedDoc)
@@ -66,7 +66,7 @@ class crudDailyReportMedthods {
   }
 
 // เพิ่มรายงานแรงงาน
-  createDailyLabor(selectedDoc,carData) async {
+  createDailyLabor(selectedDoc, carData) async {
     Firestore.instance
         .collection('DailyReport')
         .document(selectedDoc)
@@ -78,7 +78,7 @@ class crudDailyReportMedthods {
   }
 
 // เพิ่มรายงานวัสดุ
-  createDailyMaterial(selectedDoc,carData) async {
+  createDailyMaterial(selectedDoc, carData) async {
     Firestore.instance
         .collection('DailyReport')
         .document(selectedDoc)
@@ -90,7 +90,7 @@ class crudDailyReportMedthods {
   }
 
 // เพิ่มรายงานเครื่องจักร
-  createDailyMachine(selectedDoc,carData) async {
+  createDailyMachine(selectedDoc, carData) async {
     Firestore.instance
         .collection('DailyReport')
         .document(selectedDoc)
@@ -115,7 +115,7 @@ class crudDailyReportMedthods {
         .collection('DailyReport')
         .document(selectedDoc)
         .collection('DailyProgress')
-        .orderBy('txttime', descending: false) 
+        .orderBy('txttime', descending: false)
         .snapshots();
   }
 
@@ -125,7 +125,7 @@ class crudDailyReportMedthods {
         .collection('DailyReport')
         .document(selectedDoc)
         .collection('DailyStaff')
-        .orderBy('txttime', descending: false) 
+        .orderBy('txttime', descending: false)
         .snapshots();
   }
 
@@ -135,7 +135,7 @@ class crudDailyReportMedthods {
         .collection('DailyReport')
         .document(selectedDoc)
         .collection('DailyLabor')
-        .orderBy('txttime', descending: false)  
+        .orderBy('txttime', descending: false)
         .snapshots();
   }
 
@@ -145,7 +145,7 @@ class crudDailyReportMedthods {
         .collection('DailyReport')
         .document(selectedDoc)
         .collection('DailyMaterial')
-        .orderBy('txttime', descending: false) 
+        .orderBy('txttime', descending: false)
         .snapshots();
   }
 
@@ -155,15 +155,9 @@ class crudDailyReportMedthods {
         .collection('DailyReport')
         .document(selectedDoc)
         .collection('DailyMachine')
-        .orderBy('txttime', descending: false) 
+        .orderBy('txttime', descending: false)
         .snapshots();
   }
-
-
-
-
-
-
 
 // UPDATE
   updateData(selectedDoc, newValues) {
@@ -184,26 +178,24 @@ class crudDailyReportMedthods {
         .delete()
         .catchError((e) {
       print(e);
+      print('e==================>>>>> ${e.toString()}');
     });
   }
 
 //  DELETE Daily Progress
-  deleteDataDailyProgress(selectedDoc,docId) {
+  deleteDataDailyProgress(selectedDoc, docId) {
     Firestore.instance
         .collection('DailyReport')
         .document(selectedDoc)
-        .collection('DailyReport')
+        .collection('DailyProgress')
         .document(docId)
         .delete()
         .catchError((e) {
       print(e);
+      print('e==================>>>>> ${e.toString()}');
     });
     print('Work in ===>> deleteDataDailyProgress');
   }
-
-
-
-
 }
 
 // จบ
