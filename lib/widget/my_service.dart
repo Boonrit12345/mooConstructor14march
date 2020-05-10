@@ -11,6 +11,7 @@ import 'package:mooconstructor14march/utility/my_style.dart';
 import 'package:mooconstructor14march/widget/authen.dart';
 import 'package:mooconstructor14march/widget/my_proj.dart';
 import 'package:mooconstructor14march/widget/proj_menu.dart';
+import 'package:mooconstructor14march/widget/userlist.dart';
 
 class MyService extends StatefulWidget {
   @override
@@ -226,7 +227,7 @@ class _MyServiceState extends State<MyService> {
         onTap: () {
           setState(() {
             print('Click My Profile');
-            // currentWidget = MyProjList();
+            currentWidget = UserList();
           });
           Navigator.of(context).pop();
         },

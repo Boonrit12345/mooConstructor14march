@@ -7,6 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class AddDailyImagePage extends StatefulWidget {
+  // final DocumentSnapshot getPost;
+  final String getPost;
+
+  AddDailyImagePage({this.getPost});
+
   @override
   _AddDailyImagePageState createState() => _AddDailyImagePageState();
 }
@@ -14,7 +19,8 @@ class AddDailyImagePage extends StatefulWidget {
 class _AddDailyImagePageState extends State<AddDailyImagePage> {
   //  Explicit
   File file; // เก็บค่ารูปที่เลือกมา
-  String _titleImage, _dateImage, _explainImage, _unitImage, _urlImageDaily;
+  String _dateImage = "Date*";
+  String _titleImage, _explainImage, _unitImage, _urlImageDaily;
 
   DateTime dateTime;
 
@@ -83,7 +89,7 @@ class _AddDailyImagePageState extends State<AddDailyImagePage> {
   Future<void> uploadPictureToStorage() async {
     // สร้างเลข random เพื่อทำชื่อไฟล์รูป
     Random random = Random();
-    int i = random.nextInt(100000);
+    int i = random.nextInt(1000000);
 
     // สร้างตัวแปร instance เพื่อนำไปใช้งาน
     FirebaseStorage firebaseStorage = FirebaseStorage.instance;
@@ -122,11 +128,21 @@ class _AddDailyImagePageState extends State<AddDailyImagePage> {
     map['explainImage'] = _explainImage;
     map['urlImageDaily'] = _urlImageDaily;
 
+    // await firestore
+    //     .collection('ImageDailyReport')
+    //     .document() // ถ้าต้องการให้ UID มีค่าด้วยให้ใส่ค่าเป็น String ในวงเล็บ
+    //     .setData(
+    //         map) // ส่วนนี้เป็นการเพิ่มข้อมูล ถ้า Update ใช้คำสั่ง .updateData(newValues)
+    //     .then((value) {
+    //   print('Insert data is success');
+    // });
+
     await firestore
-        .collection('ImageDailyReport')
-        .document() // ถ้าต้องการให้ UID มีค่าด้วยให้ใส่ค่าเป็น String ในวงเล็บ
-        .setData(
-            map) // ส่วนนี้เป็นการเพิ่มข้อมูล ถ้า Update ใช้คำสั่ง .updateData(newValues)
+        .collection('DailyReport')
+        .document(widget.getPost.toString())
+        .collection('DailyImage')
+        .document()
+        .setData(map)
         .then((value) {
       print('Insert data is success');
     });
@@ -164,13 +180,7 @@ class _AddDailyImagePageState extends State<AddDailyImagePage> {
               if (file == null) {
                 showAlert('ไม่มีรูป', 'กรุณาเพิ่มรูปด้วย กล้อง หรือ อัลบั้ม');
               } else if (_unitImage == null ||
-                  _unitImage.isEmpty ||
-                  _dateImage == null ||
-                  _dateImage.isEmpty ||
-                  _titleImage == null ||
-                  _titleImage.isEmpty ||
-                  _explainImage == null ||
-                  _explainImage.isEmpty) {
+                  _unitImage.isEmpty ) {
                 showAlert('ไม่มีข้อมูล', 'กรุณากรอกข้อมูลในช่องว่าง');
               } else {
                 // Upload to firebase
@@ -185,7 +195,7 @@ class _AddDailyImagePageState extends State<AddDailyImagePage> {
               color: Colors.white,
             ),
             label: Text(
-              'Upload data to Firebase',
+              'Upload Image',
               style: TextStyle(color: Colors.white),
             ),
           ),
@@ -215,27 +225,7 @@ class _AddDailyImagePageState extends State<AddDailyImagePage> {
     );
   }
 
-  Widget explainImage() {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(4.0, 12.0, 4.0, 4.0),
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.9,
-        height: 55.0,
-        child: TextField(
-          onChanged: (String string) {
-            _explainImage = string.trim();
-            print('_explainImage = $_explainImage');
-          },
-          decoration: InputDecoration(
-              prefixIcon: Icon(Icons.forum, size: 30.0),
-              labelText: 'Explian detail',
-              border:
-                  OutlineInputBorder(borderRadius: BorderRadius.circular(30))),
-        ),
-      ),
-    );
-  }
-
+  
   Widget dateImage() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(4.0, 12.0, 4.0, 4.0),
@@ -256,6 +246,28 @@ class _AddDailyImagePageState extends State<AddDailyImagePage> {
           decoration: InputDecoration(
               prefixIcon: Icon(Icons.calendar_today, size: 24.0),
               labelText: _dateImage,
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(30))),
+        ),
+      ),
+    );
+  }
+
+
+  Widget explainImage() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(4.0, 12.0, 4.0, 4.0),
+      child: Container(
+        width: MediaQuery.of(context).size.width * 0.9,
+        height: 55.0,
+        child: TextField(
+          onChanged: (String string) {
+            _explainImage = string.trim();
+            print('_explainImage = $_explainImage');
+          },
+          decoration: InputDecoration(
+              prefixIcon: Icon(Icons.forum, size: 30.0),
+              labelText: 'Explian detail',
               border:
                   OutlineInputBorder(borderRadius: BorderRadius.circular(30))),
         ),
@@ -338,12 +350,13 @@ class _AddDailyImagePageState extends State<AddDailyImagePage> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             SizedBox(height: 20.0),
+            Text('ID : ${widget.getPost.toString()}',style: TextStyle(color: Colors.grey),),
             showImage(),
             // showButton(),
             unitImage(),
-            dateImage(),
+            // dateImage(),
             titleImage(),
-            explainImage(),
+            // explainImage(),
             SizedBox(height: 20.0),
             uploadButton(),
             SizedBox(height: 100.0),
@@ -360,28 +373,26 @@ class _AddDailyImagePageState extends State<AddDailyImagePage> {
         title: Text('Add Image'),
         actions: <Widget>[
           // choose gallory
-          IconButton(
-            icon: Icon(
-              Icons.add_photo_alternate,
-              color: Colors.white,
-              size: 35.0,
+          CircleAvatar(
+            child: IconButton(
+              icon: Icon(Icons.add_photo_alternate,
+                  color: Colors.white, size: 25.0),
+              onPressed: () {
+                chooseImage(ImageSource.gallery);
+              },
             ),
-            onPressed: () {
-              chooseImage(ImageSource.gallery);
-            },
           ),
+
           SizedBox(width: 20.0),
           // choose camera
-          IconButton(
-            icon: Icon(
-              Icons.add_a_photo,
-              color: Colors.white,
-              size: 30.0,
-            ),
+          CircleAvatar(
+              child: IconButton(
+            icon: Icon(Icons.add_a_photo, color: Colors.white, size: 20.0),
             onPressed: () {
               chooseImage(ImageSource.camera);
             },
-          ),
+          )),
+
           SizedBox(width: 20.0),
         ],
       ),

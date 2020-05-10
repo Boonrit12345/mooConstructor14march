@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:mooconstructor14march/daily_report/add_multi_image_upload_firestore.dart';
 import 'package:mooconstructor14march/daily_report/crud_daily_report.dart';
 import 'package:mooconstructor14march/daily_report/daily_report_detail.dart';
+import 'package:mooconstructor14march/daily_report/detail.dart';
 
 class DailyReportList extends StatefulWidget {
   @override
@@ -14,9 +15,20 @@ class _DailyReportListState extends State<DailyReportList> {
   // Explicit
   String carModel;
   String carColor;
+  String appTitle = 'Daily Report';
 
   var cars;
   crudDailyReportMedthods crudObj = new crudDailyReportMedthods();
+
+  // function
+  navigateToDetail(DocumentSnapshot post) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => DailyReportDetail(
+                  post: post,
+                )));
+  }
 
 // Method
 
@@ -60,13 +72,14 @@ class _DailyReportListState extends State<DailyReportList> {
         ),
       );
 
+// #addDialog
   Future<bool> addDialog(BuildContext context) async {
     return showDialog(
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: Text('Add Data', style: TextStyle(fontSize: 15.0)),
+            title: Text('Add Daily Report', style: TextStyle(fontSize: 15.0)),
             content: Container(
               height: 125.0,
               width: 150.0,
@@ -74,14 +87,14 @@ class _DailyReportListState extends State<DailyReportList> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   TextField(
-                    decoration: InputDecoration(hintText: 'Enter car Name'),
+                    decoration: InputDecoration(hintText: 'Date :'),
                     onChanged: (value) {
                       this.carModel = value;
                     },
                   ),
                   SizedBox(height: 5.0),
                   TextField(
-                    decoration: InputDecoration(hintText: 'Enter car color'),
+                    decoration: InputDecoration(hintText: 'Reporter :'),
                     onChanged: (value) {
                       this.carColor = value;
                     },
@@ -104,12 +117,21 @@ class _DailyReportListState extends State<DailyReportList> {
                     print(e);
                   });
                 },
-              )
+              ),
+              FlatButton(
+                child: Text('Cancel'),
+                textColor: Colors.blue,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  
+                },
+              ),
             ],
           );
         });
   }
 
+// #updateDialog
   Future<bool> updateDialog(BuildContext context, selectedDoc) async {
     return showDialog(
         context: context,
@@ -160,6 +182,7 @@ class _DailyReportListState extends State<DailyReportList> {
         });
   }
 
+// #dialogTrigger
   Future<bool> dialogTrigger(BuildContext context) async {
     return showDialog(
         context: context,
@@ -183,228 +206,79 @@ class _DailyReportListState extends State<DailyReportList> {
 
   @override
   void initState() {
+    super.initState();
     crudObj.getData().then((results) {
       setState(() {
         cars = results;
+        
       });
     });
-    super.initState();
+  }
+
+  Widget _dailyReportList() {
+    return StreamBuilder(
+      stream: cars,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          return ListView.builder(
+            itemCount: snapshot.data.documents.length,
+            padding: EdgeInsets.all(5.0),
+            itemBuilder: (context, i) {
+              return Container(
+                color: (i % 2 == 0) ? Colors.white : Colors.grey[100],
+                child: ListTile(
+                  leading: CircleAvatar(
+                    radius: 15.0,
+                    child: Text(
+                      '${i + 1}',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    backgroundColor: Colors.blue[300],
+                  ),
+                  title: Text(snapshot.data.documents[i].data['carName']),
+                  subtitle: Text('รายงานโดย: ${snapshot.data.documents[i].data['color']}'),
+                  trailing: Icon(
+                    Icons.fiber_new,
+                    color: Colors.red,
+                  ),
+                  onTap: () => navigateToDetail(snapshot.data.documents[i]),
+                  onLongPress: () {
+                    crudObj.deleteData(snapshot.data.documents[i].documentID);
+                  },
+                ),
+              );
+              
+            },
+          );
+          
+        }
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // backgroundColor: Colors.transparent,
       appBar: AppBar(
+        // backgroundColor: Color(0xFF007FFF).withOpacity(0.5), // ทำให้ Appbar โปร่งใส
         // centerTitle: true,
         title: Text('Daily Report'),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.sort, size: 35.0, color: Colors.white),
-            onPressed: null,
-          ),
-          SizedBox(
-            width: 15.0,
-          ),
           IconButton(
             icon: Icon(Icons.add, size: 35.0),
             onPressed: () {
               addDialog(context);
             },
           ),
-          SizedBox(
-            width: 15.0,
-          ),
-          // IconButton(
-          //   icon: Icon(Icons.refresh, size: 35.0),
-          //   onPressed: () {
-          //     crudObj.getData().then((results) {
-          //       setState(() {
-          //         cars = results;
-          //       });
-          //     });
-          //   },
-          // ),
-          IconButton(
-            icon: Icon(Icons.perm_media, size: 35.0),
-            onPressed: () {
-              MaterialPageRoute route =
-                  MaterialPageRoute(builder: (BuildContext context) {
-                return UploadMultipleImage();
-              });
-              Navigator.of(context).push(route); // กดย้อนกลับได้
-            },
-          ),
-          SizedBox(width: 15.0)
+          SizedBox(width: 15.0),
         ],
       ),
-      body: _carList(),
+      body: _dailyReportList(),
     );
-  }
-
-  Widget _carList() {
-    if (cars != null) {
-      return StreamBuilder(
-        stream: cars,
-        builder: (context, snapshot) {
-          if (snapshot.data != null) {
-            return ListView.builder(
-              itemCount: snapshot.data.documents.length,
-              padding: EdgeInsets.all(5.0),
-              itemBuilder: (context, i) {
-                return new ListTile(
-                  leading: FlutterLogo(size: 50.0),
-                  title: Text(snapshot.data.documents[i].data['carName']),
-                  subtitle: Text(snapshot.data.documents[i].data['color']),
-                  // subtitle: Text(snapshot.data.documents[i].documentID.toString()),
-                  trailing: Icon(Icons.more_vert),
-                  // isThreeLine: true,
-                  onTap: () {
-                    // updateDialog(
-                    //     context, snapshot.data.documents[i].documentID);
-
-                    MaterialPageRoute route =
-                        MaterialPageRoute(builder: (BuildContext context) {
-                      return DailyReportDetail();
-                    });
-                    Navigator.of(context).push(route); // กดย้อนกลับได้
-                  },
-                  onLongPress: () {
-                    crudObj.deleteData(snapshot.data.documents[i].documentID);
-                  },
-                );
-              },
-            );
-          }
-        },
-      );
-    } else {
-      return Text('Loading, Please wait..');
-    }
-  }
-
-  Widget _imageList() {
-    if (cars != null) {
-      return StreamBuilder(
-        stream: cars,
-        builder: (context, snapshot) {
-          if (snapshot.data != null) {
-            return Container(
-              color: Colors.grey,
-              margin: EdgeInsets.symmetric(vertical: 20.0),
-              height: 400.0,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: snapshot.data.documents.length,
-                padding: EdgeInsets.all(5.0),
-                itemBuilder: (context, i) {
-                  return Container(
-                    color: Colors.white,
-                    width: 200.0,
-                    height: 200.0,
-                    child: Card(
-                      child: Wrap(
-                        children: <Widget>[
-                          Image.network(
-                              'https://images.unsplash.com/photo-1503875154399-95d2b151e3b0?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60'),
-                          ListTile(
-                            title: Text(
-                                snapshot.data.documents[i].data['carName']),
-                            subtitle:
-                                Text(snapshot.data.documents[i].data['color']),
-                            // trailing: Icon(Icons.more_vert),
-                            onTap: () {},
-                            onLongPress: () {},
-                          ),
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ),
-            );
-          }
-        },
-      );
-    } else {
-      return Text('Loading, Please wait..');
-    }
-  }
-
-  Widget _imageList2() {
-    if (cars != null) {
-      return StreamBuilder(
-        stream: cars,
-        builder: (context, snapshot) {
-          if (snapshot.data != null) {
-            return ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: snapshot.data.documents.length,
-              padding: EdgeInsets.all(5.0),
-              itemBuilder: (context, i) {
-                return Container(
-                  color: Colors.white,
-                  width: 220.0,
-                  height: 200.0,
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Card(
-                          semanticContainer: true,
-                          clipBehavior: Clip.antiAliasWithSaveLayer,
-                          child: Stack(
-                            children: <Widget>[
-                              Image.network(
-                                'https://images.unsplash.com/photo-1503875154399-95d2b151e3b0?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60',
-                                width: 220,
-                                height: 170,
-                                fit: BoxFit.cover,
-                              ),
-                              Positioned(
-                                  top: 16,
-                                  left: 120,
-                                  child: Container(
-                                    height: 25,
-                                    width: 80,
-                                    decoration: BoxDecoration(
-                                        borderRadius:
-                                            BorderRadius.circular(3.0),
-                                        color:
-                                            Colors.black, //Color(0xff0F0F0F),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color:
-                                                Colors.black.withOpacity(0.3),
-                                          )
-                                        ]),
-                                    child: Center(
-                                      child: Text(
-                                        'feature',
-                                        style: TextStyle(color: Colors.white),
-                                      ),
-                                    ),
-                                  ))
-                            ],
-                          ),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5.0)),
-                          elevation: 5,
-                          margin: EdgeInsets.all(5),
-                        ),
-                        ListTile(
-                          title:
-                              Text(snapshot.data.documents[i].data['carName']),
-                          subtitle:
-                              Text(snapshot.data.documents[i].data['color']),
-                        ),
-                      ]),
-                );
-              },
-            );
-          }
-        },
-      );
-    } else {
-      return Text('Loading, Please wait..');
-    }
   }
 }

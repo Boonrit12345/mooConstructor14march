@@ -23,6 +23,7 @@ class _DemoReadDataState extends State<DemoReadData> {
     readDataBase();
   }
 
+// อ่านรายละเอียดหัวกระดาษ
   Future<void> readDataBase() async {
     String firstCollection = 'TryMaster123';
     CollectionReference collectionReference =
@@ -56,6 +57,7 @@ class _DemoReadDataState extends State<DemoReadData> {
           print('nameDocument ==>> $nameDocument');
           headTitles.add(nameDocument);
           if (i == response.documents.length) {
+
             // Find Detail HeadTitle
             createNameTitle(collectionReference, firstDocument);
           }
@@ -63,6 +65,8 @@ class _DemoReadDataState extends State<DemoReadData> {
       },
     );
   }
+
+  
 
   Future createNameTitle(
       CollectionReference collectionReference, String firstDocument) async {
@@ -221,6 +225,18 @@ class _DemoReadDataState extends State<DemoReadData> {
     );
   }
 
+  
+  Column detailDocument() {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: <Widget>[
+        showText('Subject', subjectDocument),
+        showText('NamwPaper', namePaper),
+        Divider(),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -236,14 +252,4 @@ class _DemoReadDataState extends State<DemoReadData> {
     );
   }
 
-  Column detailDocument() {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        showText('Subject', subjectDocument),
-        showText('NamwPaper', namePaper),
-        Divider(),
-      ],
-    );
-  }
 }

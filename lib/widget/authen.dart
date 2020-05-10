@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mooconstructor14march/example/dashboard.dart';
 import 'package:mooconstructor14march/utility/my_style.dart';
 import 'package:mooconstructor14march/utility/normal_dialog.dart';
 import 'package:mooconstructor14march/widget/demo_read_data.dart';
@@ -38,8 +39,10 @@ class _AuthenState extends State<Authen> {
 
   void routeToMyService() {
     MaterialPageRoute route =
-        // MaterialPageRoute(builder: (value) => MyService());
-        MaterialPageRoute(builder: (value) => DemoReadData());
+        MaterialPageRoute(builder: (value) => MyService());
+        // MaterialPageRoute(builder: (value) => DemoReadData());
+        // MaterialPageRoute(builder: (value) => DashboardPageExample());
+
     Navigator.of(context).pushAndRemoveUntil(route, (route) => false);
   }
 

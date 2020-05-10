@@ -12,32 +12,158 @@ class crudDailyReportMedthods {
     }
   }
 
-  // LOG IN CHECK
+  // ตรวจการ Log in
   Future<void> addData(carData) async {
     if (isLoggedIn()) {
-      Firestore.instance.collection('DailyReport').add(carData).catchError((e) {
-        print(e);
-      });
+      createData(carData);
     } else {
       // ถ้ายังไม่ Log in แจ้งให้ Log in
       print('You need to be logged in');
     }
   }
 
-// CREATE DATA
+// เพิ่มข้อมูล Report
+  createData(carData) async {
+    Firestore.instance.collection('DailyReport').add(carData).catchError((e) {
+      print(e);
+    });
+  }
+
+// เพิ่มรูปถ่ายประจำวัน
+  createDailyImage(selectedDoc,carData) async {
+    Firestore.instance
+        .collection('DailyReport')
+        .document(selectedDoc)
+        .collection('DailyImage')
+        .add(carData)
+        .catchError((e) {
+      print(e);
+    });
+  }
+
+// เพิ่มรายงานความก้าวหน้า
+  createDailyProgress(selectedDoc,carData) async {
+    Firestore.instance
+        .collection('DailyReport')
+        .document(selectedDoc)
+        .collection('DailyProgress')
+        .add(carData)
+        .catchError((e) {
+      print(e);
+    });
+  }
+
+// เพิ่มรายงานพนักงาน
+  createDailyStaff(selectedDoc,carData) async {
+    Firestore.instance
+        .collection('DailyReport')
+        .document(selectedDoc)
+        .collection('DailyStaff')
+        .add(carData)
+        .catchError((e) {
+      print(e);
+    });
+  }
+
+// เพิ่มรายงานแรงงาน
+  createDailyLabor(selectedDoc,carData) async {
+    Firestore.instance
+        .collection('DailyReport')
+        .document(selectedDoc)
+        .collection('DailyLabor')
+        .add(carData)
+        .catchError((e) {
+      print(e);
+    });
+  }
+
+// เพิ่มรายงานวัสดุ
+  createDailyMaterial(selectedDoc,carData) async {
+    Firestore.instance
+        .collection('DailyReport')
+        .document(selectedDoc)
+        .collection('DailyMaterial')
+        .add(carData)
+        .catchError((e) {
+      print(e);
+    });
+  }
+
+// เพิ่มรายงานเครื่องจักร
+  createDailyMachine(selectedDoc,carData) async {
+    Firestore.instance
+        .collection('DailyReport')
+        .document(selectedDoc)
+        .collection('DailyMachine')
+        .add(carData)
+        .catchError((e) {
+      print(e);
+    });
+  }
+
+// เรียกดู Daily Report
   getData() async {
     return await Firestore.instance
         .collection('DailyReport')
-        .orderBy('color', descending: true) // เรียงข้อมูลมากไปน้อย ตาม column field
+        .orderBy('color', descending: true)
         .snapshots();
-
-    // return await Firestore.instance
-    //     .collection('DailyReport') // เลือกข้อมูลจากตาราง DailyReport
-    //     .where('field',isEqualTo: 'field') // กรองค่าเฉพาะ field
-    //     .where('field2',isEqualTo: 'field2') // กรองค่าเฉพาะ field2
-    //     .orderBy('field',descending: true) // เรียงข้อมูลมากไปน้อย ตาม column field
-    //     .getDocuments();
   }
+
+// เรียกดู Daily Progress
+  getDataDailyProgress(selectedDoc) async {
+    return await Firestore.instance
+        .collection('DailyReport')
+        .document(selectedDoc)
+        .collection('DailyProgress')
+        .orderBy('txttime', descending: false) 
+        .snapshots();
+  }
+
+// เรียกดู Daily Staff
+  getDataDailyStaff(selectedDoc) async {
+    return await Firestore.instance
+        .collection('DailyReport')
+        .document(selectedDoc)
+        .collection('DailyStaff')
+        .orderBy('txttime', descending: false) 
+        .snapshots();
+  }
+
+// เรียกดู Daily Labor
+  getDataDailyLabor(selectedDoc) async {
+    return await Firestore.instance
+        .collection('DailyReport')
+        .document(selectedDoc)
+        .collection('DailyLabor')
+        .orderBy('txttime', descending: false)  
+        .snapshots();
+  }
+
+// เรียกดู Daily Material
+  getDataDailyMaterial(selectedDoc) async {
+    return await Firestore.instance
+        .collection('DailyReport')
+        .document(selectedDoc)
+        .collection('DailyMaterial')
+        .orderBy('txttime', descending: false) 
+        .snapshots();
+  }
+
+// เรียกดู Daily Machine
+  getDataDailyMachine(selectedDoc) async {
+    return await Firestore.instance
+        .collection('DailyReport')
+        .document(selectedDoc)
+        .collection('DailyMachine')
+        .orderBy('txttime', descending: false) 
+        .snapshots();
+  }
+
+
+
+
+
+
 
 // UPDATE
   updateData(selectedDoc, newValues) {
@@ -60,6 +186,24 @@ class crudDailyReportMedthods {
       print(e);
     });
   }
+
+//  DELETE Daily Progress
+  deleteDataDailyProgress(selectedDoc,docId) {
+    Firestore.instance
+        .collection('DailyReport')
+        .document(selectedDoc)
+        .collection('DailyReport')
+        .document(docId)
+        .delete()
+        .catchError((e) {
+      print(e);
+    });
+    print('Work in ===>> deleteDataDailyProgress');
+  }
+
+
+
+
 }
 
 // จบ

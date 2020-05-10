@@ -7,9 +7,8 @@ class UserList extends StatefulWidget {
 }
 
 class _UserListState extends State<UserList> {
-
 // Explicit
-Future _data;
+  Future _data;
 
   Future getPosts() async {
     var firestore = Firestore.instance;
@@ -19,7 +18,7 @@ Future _data;
     return qn.documents;
   }
 
-  // Funtion
+  // function
   navigateToDetail(DocumentSnapshot post) {
     Navigator.push(
         context,
@@ -43,7 +42,7 @@ Future _data;
           builder: (_, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Center(
-                child: Text('Loading ...'),
+                child: CircularProgressIndicator(),
               );
             } else {
               return ListView.builder(
@@ -83,20 +82,13 @@ Future _data;
     );
   }
 
-
-
-
-
-
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      
+      child: showListOfUser(),
     );
   }
 }
-
 
 // Page สำหรับดูรายละเอียด
 class DetailPage extends StatefulWidget {

@@ -1,12 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:mooconstructor14march/daily_report/Features.dart';
-import 'package:mooconstructor14march/daily_report/MainGridList.dart';
+// import 'package:mooconstructor14march/daily_report/Features.dart';
+// import 'package:mooconstructor14march/daily_report/MainGridList.dart';
 import 'package:mooconstructor14march/daily_report/add_daily_image.dart';
+import 'package:mooconstructor14march/daily_report/add_multi_image_upload_firestore.dart';
 import 'package:mooconstructor14march/daily_report/crud_Picture_daily_report.dart';
-import 'package:mooconstructor14march/daily_report/crud_daily_report.dart';
+// import 'package:mooconstructor14march/daily_report/crud_daily_report.dart';
 import 'package:bezier_chart/bezier_chart.dart';
+import 'package:mooconstructor14march/daily_report/crud_daily_report.dart';
 
 class DailyReportDetail extends StatefulWidget {
+  // Explicit
+  final DocumentSnapshot post;
+
+  DailyReportDetail({this.post});
+
   @override
   _DailyReportDetailState createState() => _DailyReportDetailState();
 }
@@ -15,401 +23,266 @@ class _DailyReportDetailState extends State<DailyReportDetail> {
   // Explicit
   String carModel;
   String carColor;
+  String getPost;
 
   var cars;
+  var dailyProgress;
+  var dailyStaff;
+  var dailyLabor;
+  var dailyMaterial;
+  var dailyMachine;
+
+  var thisInstant = new DateTime.now();
+
+  // ข้อมูลรูป
   crudPictureDailyReportMedthods crudObj = new crudPictureDailyReportMedthods();
+  // ข้อมูลรายงานประจำวัน
+  crudDailyReportMedthods crudObjDailyReport = new crudDailyReportMedthods();
+
+  // function
+  navigateToDetail(String _getPost) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => AddDailyImagePage(
+                  getPost: _getPost,
+                )));
+  }
 
   // Method
 
   @override
   void initState() {
-    crudObj.getData().then((results) {
+    super.initState();
+    getPost = widget.post.documentID;
+    thisInstant = new DateTime.now();
+
+    // รับข้อมูล รูปถ่ายประจำวัน มาแสดง
+    crudObj.getData(widget.post.documentID).then((results) {
       setState(() {
         cars = results;
       });
     });
-    super.initState();
+
+    // รับข้อมูล รายงานประจำวัน มาแสดง
+    crudObjDailyReport
+        .getDataDailyProgress(widget.post.documentID)
+        .then((results) {
+      setState(() {
+        dailyProgress = results;
+      });
+    });
+
+    // รับข้อมูล พนักงาน มาแสดง
+    crudObjDailyReport
+        .getDataDailyStaff(widget.post.documentID)
+        .then((results) {
+      setState(() {
+        dailyStaff = results;
+      });
+    });
+
+    // รับข้อมูล แรงงาน มาแสดง
+    crudObjDailyReport
+        .getDataDailyLabor(widget.post.documentID)
+        .then((results) {
+      setState(() {
+        dailyLabor = results;
+      });
+    });
+
+    // รับข้อมูล วัสดุ มาแสดง
+    crudObjDailyReport
+        .getDataDailyMaterial(widget.post.documentID)
+        .then((results) {
+      setState(() {
+        dailyMaterial = results;
+      });
+    });
+
+    // รับข้อมูล เครื่องจักร มาแสดง
+    crudObjDailyReport
+        .getDataDailyMachine(widget.post.documentID)
+        .then((results) {
+      setState(() {
+        dailyMachine = results;
+      });
+    });
   }
 
-  Widget sample5(BuildContext context) {
-    final fromDate = DateTime(2012, 11, 22);
-    final toDate = DateTime.now();
+  Future<bool> dialogTrigger(BuildContext context) async {
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Job Done', style: TextStyle(fontSize: 15.0)),
+            content: Text('Added'),
+            actions: <Widget>[
+              FlatButton(
+                child: Text('Alright'),
+                textColor: Colors.blue,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              )
+            ],
+          );
+        });
+  }
 
-    final date1 = DateTime.now().subtract(Duration(days: 2));
-    final date2 = DateTime.now().subtract(Duration(days: 3));
-
-    final date3 = DateTime.now().subtract(Duration(days: 300));
-    final date4 = DateTime.now().subtract(Duration(days: 320));
-
-    final date5 = DateTime.now().subtract(Duration(days: 650));
-    final date6 = DateTime.now().subtract(Duration(days: 652));
-
-    return Center(
-      child: Container(
-        color: Colors.red,
-        height: MediaQuery.of(context).size.height / 2,
-        width: MediaQuery.of(context).size.width,
-        child: BezierChart(
-          bezierChartScale: BezierChartScale.YEARLY,
-          fromDate: fromDate,
-          toDate: toDate,
-          selectedDate: toDate,
-          series: [
-            BezierLine(
-              label: "Duty",
-              onMissingValue: (dateTime) {
-                if (dateTime.year.isEven) {
-                  return 20.0;
-                }
-                return 5.0;
-              },
-              data: [
-                DataPoint<DateTime>(value: 10, xAxis: date1),
-                DataPoint<DateTime>(value: 50, xAxis: date2),
-                DataPoint<DateTime>(value: 100, xAxis: date3),
-                DataPoint<DateTime>(value: 100, xAxis: date4),
-                DataPoint<DateTime>(value: 40, xAxis: date5),
-                DataPoint<DateTime>(value: 47, xAxis: date6),
-              ],
+  Widget showListview() {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: ClampingScrollPhysics(),
+      itemCount: 4,
+      itemBuilder: (BuildContext context, int childIdx) {
+        return Column(
+          children: <Widget>[
+            Container(
+              height: 40.0,
+              child: ListTile(
+                leading: Text('${childIdx + 1}'),
+                title: Text("Child $childIdx"),
+                trailing: Text('100'),
+              ),
             ),
-            BezierLine(
-              label: "Flight",
-              lineColor: Colors.black26,
-              onMissingValue: (dateTime) {
-                if (dateTime.month.isEven) {
-                  return 10.0;
-                }
-                return 3.0;
-              },
-              data: [
-                DataPoint<DateTime>(value: 20, xAxis: date1),
-                DataPoint<DateTime>(value: 30, xAxis: date2),
-                DataPoint<DateTime>(value: 150, xAxis: date3),
-                DataPoint<DateTime>(value: 80, xAxis: date4),
-                DataPoint<DateTime>(value: 45, xAxis: date5),
-                DataPoint<DateTime>(value: 45, xAxis: date6),
-              ],
+            Divider(
+              thickness: 1.2,
             ),
           ],
-          config: BezierChartConfig(
-            verticalIndicatorStrokeWidth: 3.0,
-            verticalIndicatorColor: Colors.black26,
-            showVerticalIndicator: true,
-            verticalIndicatorFixedPosition: false,
-            backgroundGradient: LinearGradient(
-              colors: [
-                Colors.red[300],
-                Colors.red[400],
-                Colors.red[400],
-                Colors.red[500],
-                Colors.red,
-              ],
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-            ),
-            footerHeight: 30.0,
-          ),
-        ),
-      ),
+        );
+      },
     );
   }
 
-  Widget sample4(BuildContext context) {
-    final fromDate = DateTime(2018, 11, 22);
-    final toDate = DateTime.now();
-
-    final date1 = DateTime.now().subtract(Duration(days: 2));
-    final date2 = DateTime.now().subtract(Duration(days: 3));
-
-    final date3 = DateTime.now().subtract(Duration(days: 35));
-    final date4 = DateTime.now().subtract(Duration(days: 36));
-
-    final date5 = DateTime.now().subtract(Duration(days: 65));
-    final date6 = DateTime.now().subtract(Duration(days: 64));
-
-    return Center(
-      child: Container(
-        color: Colors.red,
-        height: MediaQuery.of(context).size.height / 2,
-        width: MediaQuery.of(context).size.width,
-        child: BezierChart(
-          bezierChartScale: BezierChartScale.MONTHLY,
-          fromDate: fromDate,
-          toDate: toDate,
-          selectedDate: toDate,
-          series: [
-            BezierLine(
-              label: "Duty",
-              onMissingValue: (dateTime) {
-                if (dateTime.month.isEven) {
-                  return 10.0;
-                }
-                return 5.0;
-              },
-              data: [
-                DataPoint<DateTime>(value: 10, xAxis: date1),
-                DataPoint<DateTime>(value: 50, xAxis: date2),
-                DataPoint<DateTime>(value: 20, xAxis: date3),
-                DataPoint<DateTime>(value: 80, xAxis: date4),
-                DataPoint<DateTime>(value: 14, xAxis: date5),
-                DataPoint<DateTime>(value: 30, xAxis: date6),
-              ],
-            ),
-          ],
-          config: BezierChartConfig(
-            verticalIndicatorStrokeWidth: 3.0,
-            verticalIndicatorColor: Colors.black26,
-            showVerticalIndicator: true,
-            verticalIndicatorFixedPosition: false,
-            backgroundColor: Colors.red,
-            footerHeight: 30.0,
+  Widget showDailyReportTitleTable() {
+    return Column(
+      children: <Widget>[
+        ListTile(
+          leading: CircleAvatar(
+              child: Icon(Icons.description, size: 40.0), radius: 40.0),
+          title: Text('วันที่ : ${widget.post.data['carName']}'),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Text('ผู้รายงาน : ${widget.post.data['color']}'),
+              Text('ผู้รับทราบ : ${widget.post.data['color']}'),
+              // Text('${widget.post.documentID}'),
+              Text(getPost),
+            ],
           ),
         ),
-      ),
-    );
-  }
-
-  Widget sample3(BuildContext context) {
-    final fromDate = DateTime(2019, 05, 22);
-    final toDate = DateTime.now();
-
-    final date1 = DateTime.now().subtract(Duration(days: 2));
-    final date2 = DateTime.now().subtract(Duration(days: 3));
-
-    return Center(
-      child: Container(
-        color: Colors.red,
-        height: MediaQuery.of(context).size.height / 2,
-        width: MediaQuery.of(context).size.width,
-        child: BezierChart(
-          fromDate: fromDate,
-          bezierChartScale: BezierChartScale.WEEKLY,
-          toDate: toDate,
-          selectedDate: toDate,
-          series: [
-            BezierLine(
-              label: "Duty",
-              onMissingValue: (dateTime) {
-                if (dateTime.day.isEven) {
-                  return 10.0;
-                }
-                return 5.0;
-              },
-              data: [
-                DataPoint<DateTime>(value: 10, xAxis: date1),
-                DataPoint<DateTime>(value: 50, xAxis: date2),
-              ],
-            ),
-          ],
-          config: BezierChartConfig(
-            verticalIndicatorStrokeWidth: 3.0,
-            verticalIndicatorColor: Colors.black26,
-            showVerticalIndicator: true,
-            verticalIndicatorFixedPosition: false,
-            backgroundColor: Colors.red,
-            footerHeight: 30.0,
-          ),
+        Divider(
+          thickness: 2.0,
         ),
-      ),
-    );
-  }
-
-  Widget sample2(BuildContext context) {
-    return Center(
-      child: Container(
-        color: Colors.red,
-        height: MediaQuery.of(context).size.height / 2,
-        width: MediaQuery.of(context).size.width,
-        child: BezierChart(
-          bezierChartScale: BezierChartScale.CUSTOM,
-          xAxisCustomValues: const [0, 3, 10, 15, 20, 25, 30, 35],
-          series: const [
-            BezierLine(
-              label: "Custom 1",
-              data: const [
-                DataPoint<double>(value: 10, xAxis: 0),
-                DataPoint<double>(value: 130, xAxis: 5),
-                DataPoint<double>(value: 50, xAxis: 10),
-                DataPoint<double>(value: 150, xAxis: 15),
-                DataPoint<double>(value: 75, xAxis: 20),
-                DataPoint<double>(value: 0, xAxis: 25),
-                DataPoint<double>(value: 5, xAxis: 30),
-                DataPoint<double>(value: 45, xAxis: 35),
-              ],
-            ),
-            BezierLine(
-              lineColor: Colors.blue,
-              lineStrokeWidth: 2.0,
-              label: "Custom 2",
-              data: const [
-                DataPoint<double>(value: 5, xAxis: 0),
-                DataPoint<double>(value: 50, xAxis: 5),
-                DataPoint<double>(value: 30, xAxis: 10),
-                DataPoint<double>(value: 30, xAxis: 15),
-                DataPoint<double>(value: 50, xAxis: 20),
-                DataPoint<double>(value: 40, xAxis: 25),
-                DataPoint<double>(value: 10, xAxis: 30),
-                DataPoint<double>(value: 30, xAxis: 35),
-              ],
-            ),
-            BezierLine(
-              lineColor: Colors.black,
-              lineStrokeWidth: 2.0,
-              label: "Custom 3",
-              data: const [
-                DataPoint<double>(value: 5, xAxis: 0),
-                DataPoint<double>(value: 10, xAxis: 5),
-                DataPoint<double>(value: 35, xAxis: 10),
-                DataPoint<double>(value: 40, xAxis: 15),
-                DataPoint<double>(value: 40, xAxis: 20),
-                DataPoint<double>(value: 40, xAxis: 25),
-                DataPoint<double>(value: 9, xAxis: 30),
-                DataPoint<double>(value: 11, xAxis: 35),
-              ],
-            ),
-          ],
-          config: BezierChartConfig(
-            verticalIndicatorStrokeWidth: 2.0,
-            verticalIndicatorColor: Colors.black12,
-            showVerticalIndicator: true,
-            contentWidth: MediaQuery.of(context).size.width * 2,
-            backgroundColor: Colors.red,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget sample1(BuildContext context) {
-    return Center(
-      child: Container(
-        color: Colors.red,
-        height: MediaQuery.of(context).size.height / 2,
-        width: MediaQuery.of(context).size.width,
-        child: BezierChart(
-          bezierChartScale: BezierChartScale.CUSTOM,
-          xAxisCustomValues: const [0, 5, 10, 15, 20, 25, 30, 35],
-          series: const [
-            BezierLine(
-              data: const [
-                DataPoint<double>(value: 10, xAxis: 0),
-                DataPoint<double>(value: 130, xAxis: 5),
-                DataPoint<double>(value: 50, xAxis: 10),
-                DataPoint<double>(value: 150, xAxis: 15),
-                DataPoint<double>(value: 75, xAxis: 20),
-                DataPoint<double>(value: 0, xAxis: 25),
-                DataPoint<double>(value: 5, xAxis: 30),
-                DataPoint<double>(value: 45, xAxis: 35),
-              ],
-            ),
-          ],
-          config: BezierChartConfig(
-              verticalIndicatorStrokeWidth: 3.0,
-              verticalIndicatorColor: Colors.black26,
-              showVerticalIndicator: true,
-              backgroundColor: Colors.red,
-              snap: false),
-        ),
-      ),
+      ],
     );
   }
 
   Widget _imageList2() {
-    if (cars != null) {
-      return Container(
-        height: 280.0,
-        child: StreamBuilder(
-          stream: cars,
-          builder: (context, snapshot) {
-            if (snapshot.data != null) {
-              return ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemCount: snapshot.data.documents.length,
-                padding: EdgeInsets.all(5.0),
-                itemBuilder: (context, i) {
-                  return Container(
-                    width: 220.0,
-                    height: 220.0,
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Card(
-                            semanticContainer: true,
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            child: Stack(
-                              children: <Widget>[
-                                Image.network(
-                                  snapshot
-                                      .data.documents[i].data['urlImageDaily'],
-                                  width: 220,
-                                  height: 170,
-                                  fit: BoxFit.cover,
-                                ),
-                                Positioned(
-                                    top: 16,
-                                    left: 160,
-                                    child: Container(
-                                      height: 25,
-                                      width: 40,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(3.0),
-                                          color:
-                                              Colors.black, //Color(0xff0F0F0F),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color:
-                                                  Colors.black.withOpacity(0.3),
-                                            )
-                                          ]),
-                                      child: Center(
-                                        child: Text(
-                                          snapshot.data.documents[i]
-                                              .data['unitImage'],
-                                          style: TextStyle(color: Colors.white),
-                                        ),
+    return StreamBuilder(
+      stream: cars, // รับข้อมูลแบบ dynamic หรือ map ก็ได้
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else {
+          return Container(
+            height: (snapshot.data.documents.length > 0) ? 280.0 : 0.0,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: snapshot.data.documents.length,
+              padding: EdgeInsets.all(5.0),
+              itemBuilder: (context, i) {
+                return Container(
+                  width: 220.0,
+                  height: 220.0,
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Card(
+                          semanticContainer: true,
+                          clipBehavior: Clip.antiAliasWithSaveLayer,
+                          child: Stack(
+                            children: <Widget>[
+                              Image.network(
+                                snapshot
+                                    .data.documents[i].data['urlImageDaily'],
+                                width: 220,
+                                height: 170,
+                                fit: BoxFit.cover,
+                              ),
+                              Positioned(
+                                  top: 16,
+                                  left: 160,
+                                  child: Container(
+                                    height: 25,
+                                    width: 40,
+                                    decoration: BoxDecoration(
+                                        borderRadius:
+                                            BorderRadius.circular(3.0),
+                                        color:
+                                            Colors.black, //Color(0xff0F0F0F),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color:
+                                                Colors.black.withOpacity(0.3),
+                                          )
+                                        ]),
+                                    child: Center(
+                                      child: Text(
+                                        (snapshot.data.documents[i]
+                                                    .data['unitImage'] !=
+                                                null)
+                                            ? snapshot.data.documents[i]
+                                                .data['unitImage']
+                                            : 'n/a',
+                                        style: TextStyle(color: Colors.white),
                                       ),
-                                    ))
-                              ],
-                            ),
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5.0)),
-                            elevation: 5,
-                            margin: EdgeInsets.all(5),
+                                    ),
+                                  )),
+                            ],
                           ),
-                          ListTile(
-                              title: Text(snapshot
-                                  .data.documents[i].data['titleImage']),
-                              subtitle: Text(snapshot
-                                  .data.documents[i].data['explainImage']),
-                              // onLongPress: () {
-                              //   crudObj.deleteData(
-                              //       snapshot.data.documents[i].documentID);
-                              // },
-                              trailing: CircleAvatar(
-                                backgroundColor: Colors.grey[200],
-                                child: IconButton(
-                                  icon: Icon(
-                                    Icons.delete,
-                                    color: Colors.grey,
-                                  ),
-                                  onPressed: () {
-                                    crudObj.deleteData(
-                                        snapshot.data.documents[i].documentID);
-                                  },
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5.0)),
+                          elevation: 5,
+                          margin: EdgeInsets.all(5),
+                        ),
+                        ListTile(
+                            title: Text((snapshot
+                                        .data.documents[i].data['titleImage'] !=
+                                    null)
+                                ? snapshot.data.documents[i].data['titleImage']
+                                : ''),
+                            subtitle: Text((snapshot.data.documents[i]
+                                        .data['explainImage'] !=
+                                    null)
+                                ? snapshot
+                                    .data.documents[i].data['explainImage']
+                                : ''),
+                            trailing: CircleAvatar(
+                              backgroundColor: Colors.grey[200],
+                              child: IconButton(
+                                icon: Icon(
+                                  Icons.cancel,
+                                  color: Colors.grey,
                                 ),
-                              )),
-                        ]),
-                  );
-                },
-              );
-            }
-          },
-        ),
-      );
-    } else {
-      return Center(child: Text('Loading, Please wait..'));
-    }
+                                onPressed: () {
+                                  crudObj.deleteData(
+                                      snapshot.data.documents[i].documentID);
+                                },
+                              ),
+                            )),
+                      ]),
+                );
+              },
+            ),
+          );
+        }
+      },
+    );
   }
 
   Widget acceptButton() {
@@ -426,409 +299,6 @@ class _DailyReportDetailState extends State<DailyReportDetail> {
           style: TextStyle(color: Colors.white),
         ),
         onPressed: () {},
-      ),
-    );
-  }
-
-  Widget showMachineDataTable() {
-    return Container(
-      child: DataTable(
-        columnSpacing: 20.0,
-        columns: [
-          DataColumn(label: Text('No.')),
-          DataColumn(label: Text('ประเภท')),
-          DataColumn(label: Text('จำนวน')),
-        ],
-        rows: [
-          DataRow(
-            cells: [
-              DataCell(Text('1')),
-              DataCell(Text('รถเบคโฮ PC120')),
-              DataCell(Text('1')),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('2')),
-              DataCell(Text('รถบรรทุก 6 ล้อ')),
-              DataCell(Text('2')),
-            ],
-          ),
-        ],
-        sortColumnIndex: 0,
-        sortAscending: true,
-      ),
-    );
-  }
-
-  Widget showMaterialDataTable() {
-    return Container(
-      child: DataTable(
-        columnSpacing: 20.0,
-        columns: [
-          DataColumn(label: Text('No.')),
-          DataColumn(label: Text('ประเภท')),
-          DataColumn(label: Text('จำนวน')),
-        ],
-        rows: [
-          DataRow(
-            cells: [
-              DataCell(Text('1')),
-              DataCell(Text('เหล็กเส้น')),
-              DataCell(Text('10')),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('2')),
-              DataCell(Text('เหล็กรูปพรรณ')),
-              DataCell(Text('9')),
-            ],
-          ),
-        ],
-        sortColumnIndex: 0,
-        sortAscending: true,
-      ),
-    );
-  }
-
-  // ตารางพนักงาน
-  Widget showStaffDataTable() {
-    return Container(
-      child: DataTable(
-        columnSpacing: 20.0,
-        columns: [
-          DataColumn(label: Text('No.')),
-          DataColumn(label: Text('พนักงาน')),
-          DataColumn(label: Text('จำนวน')),
-        ],
-        rows: [
-          DataRow(
-            cells: [
-              DataCell(Text('1')),
-              DataCell(Text('ผู้อำนวยการโครงการ')),
-              DataCell(Text('10')),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('2')),
-              DataCell(Text('ผู้จัดการโครงการ')),
-              DataCell(Text('9')),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('3')),
-              DataCell(Text('วิศวกรโครงการ')),
-              DataCell(Text('9')),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('4')),
-              DataCell(Text('ผช. วิศวกรโครงการ')),
-              DataCell(Text('9')),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('5')),
-              DataCell(Text('วิศวกร')),
-              DataCell(Text('9')),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('6')),
-              DataCell(Text('สถาปนิค')),
-              DataCell(Text('9')),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('7')),
-              DataCell(Text('หัวหน้าโฟร์แมน')),
-              DataCell(Text('9')),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('8')),
-              DataCell(Text('โฟร์แมน')),
-              DataCell(Text('9')),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('9')),
-              DataCell(Text('เขียนแบบ')),
-              DataCell(Text('9')),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('10')),
-              DataCell(Text('ธุรการ')),
-              DataCell(Text('9')),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('11')),
-              DataCell(Text('สโตร์')),
-              DataCell(Text('9')),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('12')),
-              DataCell(Text('ช่างซ่อมบำรุง')),
-              DataCell(Text('9')),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ตารางแรงงาน
-  Widget showManpoerDataTable() {
-    return Container(
-      child: DataTable(
-        columnSpacing: 20.0,
-        columns: [
-          DataColumn(label: Text('No.')),
-          DataColumn(label: Text('ประเภทแรงงาน')),
-          DataColumn(label: Text('จำนวน')),
-        ],
-        rows: [
-          DataRow(
-            cells: [
-              DataCell(Text('1')),
-              DataCell(Text('ช่างไม้')),
-              DataCell(Text('10')),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('2')),
-              DataCell(Text('ช่างเหล็ก')),
-              DataCell(Text('9')),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('3')),
-              DataCell(Text('ช่างคอนกรีต')),
-              DataCell(Text('9')),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('4')),
-              DataCell(Text('ช่างไฟฟ้า')),
-              DataCell(Text('9')),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('5')),
-              DataCell(Text('ช่างประปา')),
-              DataCell(Text('9')),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('6')),
-              DataCell(Text('ช่างแอร์')),
-              DataCell(Text('9')),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('7')),
-              DataCell(Text('ช่างกล')),
-              DataCell(Text('9')),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('8')),
-              DataCell(Text('ช่างสำรวจ')),
-              DataCell(Text('9')),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('9')),
-              DataCell(Text('ช่างเชื่อม')),
-              DataCell(Text('9')),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('10')),
-              DataCell(Text('ช่างปูน')),
-              DataCell(Text('9')),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('11')),
-              DataCell(Text('ช่างกระเบื้อง')),
-              DataCell(Text('9')),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('12')),
-              DataCell(Text('ช่างฝ้า')),
-              DataCell(Text('9')),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('13')),
-              DataCell(Text('ช่างอลูมิเนียม')),
-              DataCell(Text('9')),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('14')),
-              DataCell(Text('ช่างทาสี')),
-              DataCell(Text('9')),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('15')),
-              DataCell(Text('ช่างเบ็ดเตล็ด')),
-              DataCell(Text('9')),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget showProgressDataTable() {
-    return Container(
-      child: DataTable(
-        columnSpacing: 20.0,
-        columns: [
-          DataColumn(label: Text('No.')),
-          DataColumn(label: Text('รายการ')),
-          DataColumn(label: Text('%Actual')),
-          DataColumn(label: Text('%Plan')),
-          DataColumn(label: Text('%Delay')),
-        ],
-        rows: [
-          DataRow(
-            cells: [
-              DataCell(Text('1')),
-              DataCell(Text('aaaaaa')),
-              DataCell(Text('10%')),
-              DataCell(Text('10%')),
-              DataCell(Text('0%')),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('2')),
-              DataCell(Text('aaaaaa')),
-              DataCell(Text('10%')),
-              DataCell(Text('10%')),
-              DataCell(Text('0%')),
-            ],
-          ),
-        ],
-        sortColumnIndex: 0,
-        sortAscending: true,
-      ),
-    );
-  }
-
-  Widget showProgressDataTable2() {
-    return Container(
-      child: DataTable(
-        columnSpacing: 20.0,
-        columns: [
-          DataColumn(label: Text('no.')),
-          DataColumn(
-            label: Container(
-              width: MediaQuery.of(context).size.width * 0.9,
-              child: Text('รายละเอียด'),
-            ),
-          ),
-        ],
-        rows: [
-          DataRow(
-            cells: [
-              DataCell(Text('1')),
-              DataCell(TextField(
-                decoration: InputDecoration(border: InputBorder.none),
-              )),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('2')),
-              DataCell(TextField(
-                decoration: InputDecoration(border: InputBorder.none),
-              )),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('3')),
-              DataCell(TextField(
-                decoration: InputDecoration(border: InputBorder.none),
-              )),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('4')),
-              DataCell(TextField(
-                decoration: InputDecoration(border: InputBorder.none),
-              )),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('5')),
-              DataCell(TextField(
-                decoration: InputDecoration(border: InputBorder.none),
-              )),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('6')),
-              DataCell(TextField(
-                decoration: InputDecoration(border: InputBorder.none),
-              )),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('7')),
-              DataCell(TextField(
-                decoration: InputDecoration(border: InputBorder.none),
-              )),
-            ],
-          ),
-          DataRow(
-            cells: [
-              DataCell(Text('8')),
-              DataCell(TextField(
-                decoration: InputDecoration(border: InputBorder.none),
-              )),
-            ],
-          ),
-        ],
       ),
     );
   }
@@ -873,13 +343,7 @@ class _DailyReportDetailState extends State<DailyReportDetail> {
   Widget showCoverReport() {
     return Column(
       children: <Widget>[
-        // Text('รูปถ่ายประจำวัน'),
         Image.asset('images/arch123.jpg'),
-        // Text('วันที่'),
-        // Text(
-        //   '3/4/2563',
-        //   style: TextStyle(fontSize: 18.0),
-        // ),
       ],
     );
   }
@@ -922,24 +386,326 @@ class _DailyReportDetailState extends State<DailyReportDetail> {
     );
   }
 
+  Future<bool> addDailyProgress(BuildContext context) async {
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Add Daily Progress', style: TextStyle(fontSize: 15.0)),
+            content: Container(
+              height: 125.0,
+              width: 150.0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  TextField(
+                    decoration: InputDecoration(hintText: 'รายละเอียดงาน :'),
+                    onChanged: (value) {
+                      this.carModel = value;
+                    },
+                  ),
+                  SizedBox(height: 5.0),
+                  TextField(
+                    decoration: InputDecoration(hintText: 'ปริมาณงาน :'),
+                    onChanged: (value) {
+                      this.carColor = value;
+                    },
+                  ),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              RaisedButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(18.0),
+                    side: BorderSide(color: Colors.blue)),
+                child: Text('Add'),
+                textColor: Colors.white,
+                color: Colors.blue,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  setState(() {
+                    thisInstant = new DateTime.now();
+                  });
+                  crudObjDailyReport
+                      .createDailyProgress(widget.post.documentID, {
+                    'items': this.carModel,
+                    'actual': this.carColor,
+                    'txttime': this.thisInstant,
+                  }).then((result) {
+                    // dialogTrigger(context);
+                  }).catchError((e) {
+                    print(e);
+                  });
+                },
+              ),
+              SizedBox(width: 10.0),
+              RaisedButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(18.0),
+                    side: BorderSide(color: Colors.blue)),
+                child: Text('Cancel'),
+                textColor: Colors.blue,
+                color: Colors.white,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  Widget showDailyProgress() {
+    if (dailyProgress != null) {
+      return StreamBuilder(
+        stream: dailyProgress, // รับข้อมูลแบบ dynamic หรือ map ก็ได้
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return ListView.builder(
+              shrinkWrap: true,
+              physics: ClampingScrollPhysics(),
+              itemCount: snapshot.data.documents.length,
+              padding: EdgeInsets.all(5.0),
+              itemBuilder: (context, i) {
+                return Column(
+                  children: <Widget>[
+                    Container(
+                      height: 40.0,
+                      child: ListTile(
+                        leading: Text('${i + 1}'),
+                        title: Text(
+                            (snapshot.data.documents[i].data['items'] != null)
+                                ? snapshot.data.documents[i].data['items']
+                                : 'n/a'),
+                        trailing: Text(
+                            (snapshot.data.documents[i].data['actual'] != null)
+                                ? snapshot.data.documents[i].data['actual']
+                                : 'n/a'),
+                        onLongPress: () {
+                          setState(() {
+                            crudObjDailyReport.deleteDataDailyProgress(
+                                widget.post.documentID,
+                                snapshot.data.documents[i].documentID);
+                          });
+                        },
+                      ),
+                    ),
+                    Divider(),
+                  ],
+                );
+              },
+            );
+          }
+        },
+      );
+    } else {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Text('click add to add data!'),
+        ],
+      );
+    }
+  }
+
+  Future<bool> addDailyStaff(BuildContext context) async {
+    return showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Add Daily Staff', style: TextStyle(fontSize: 15.0)),
+            content: Container(
+              height: 125.0,
+              width: 150.0,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  TextField(
+                    decoration: InputDecoration(hintText: 'ตำแหน่งพนักงาน :'),
+                    onChanged: (value) {
+                      this.carModel = value;
+                    },
+                  ),
+                  SizedBox(height: 5.0),
+                  TextField(
+                    decoration: InputDecoration(hintText: 'จำนวน :'),
+                    onChanged: (value) {
+                      this.carColor = value;
+                    },
+                  ),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              RaisedButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(18.0),
+                    side: BorderSide(color: Colors.blue)),
+                child: Text('Add'),
+                textColor: Colors.white,
+                color: Colors.blue,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  setState(() {
+                    thisInstant = new DateTime.now();
+                  });
+                  crudObjDailyReport.createDailyStaff(widget.post.documentID, {
+                    'items': this.carModel,
+                    'actual': this.carColor,
+                    'txttime': this.thisInstant,
+                  }).then((result) {
+                    // dialogTrigger(context);
+                  }).catchError((e) {
+                    print(e);
+                  });
+                },
+              ),
+              SizedBox(
+                width: 10.0,
+              ),
+              RaisedButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: new BorderRadius.circular(18.0),
+                    side: BorderSide(color: Colors.blue)),
+                child: Text('Cancel'),
+                textColor: Colors.blue,
+                color: Colors.white,
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
+  }
+
+  Widget showDailyStaff() {
+    if (dailyStaff != null) {
+      return StreamBuilder(
+        stream: dailyStaff, // รับข้อมูลแบบ dynamic หรือ map ก็ได้
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return ListView.builder(
+              shrinkWrap: true,
+              physics: ClampingScrollPhysics(),
+              itemCount: snapshot.data.documents.length,
+              padding: EdgeInsets.all(5.0),
+              itemBuilder: (context, i) {
+                return Column(
+                  children: <Widget>[
+                    Container(
+                      height: 40.0,
+                      child: ListTile(
+                        leading: Text('${i + 1}'),
+                        title: Text(
+                            (snapshot.data.documents[i].data['items'] != null)
+                                ? snapshot.data.documents[i].data['items']
+                                : 'n/a'),
+                        trailing: Text(
+                            (snapshot.data.documents[i].data['actual'] != null)
+                                ? snapshot.data.documents[i].data['actual']
+                                : 'n/a'),
+                        onLongPress: () {},
+                      ),
+                    ),
+                    Divider(),
+                  ],
+                );
+              },
+            );
+          }
+        },
+      );
+    } else {
+      return Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[
+          Text('click add to add data!'),
+        ],
+      );
+    }
+  }
+
+  Future<void> createDailyLabor() {
+    crudObjDailyReport.createDailyLabor(widget.post.documentID, {
+      'carName': 'this.carModel',
+      'color': 'this.carColor',
+    }).then((result) {
+      // dialogTrigger(context);
+    }).catchError((e) {
+      print(e);
+    });
+  }
+
+  Future<void> createDailyMaterial() {
+    crudObjDailyReport.createDailyMaterial(widget.post.documentID, {
+      'carName': 'this.carModel',
+      'color': 'this.carColor',
+    }).then((result) {
+      // dialogTrigger(context);
+    }).catchError((e) {
+      print(e);
+    });
+  }
+
+  Future<void> createDailyMachine() {
+    crudObjDailyReport.createDailyMachine(widget.post.documentID, {
+      'carName': 'this.carModel',
+      'color': 'this.carColor',
+    }).then((result) {
+      // dialogTrigger(context);
+    }).catchError((e) {
+      print(e);
+    });
+  }
+
+  Widget buildListTile(String no, String items, String actual) {
+    return Container(
+      height: 30.0,
+      child: ListTile(
+        leading: Text(no, style: TextStyle(fontSize: 14.0)),
+        title: Text(items, style: TextStyle(fontSize: 14.0)),
+        trailing: Text(actual, style: TextStyle(fontSize: 14.0)),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('03 เมษายน 2563'),
+        title: Text('รายงานประจำวัน'),
         actions: <Widget>[
-          // IconButton(
-          //     icon: Icon(Icons.delete, color: Colors.white), onPressed: null),
-          // IconButton(
-          //     icon: Icon(Icons.refresh, color: Colors.white), onPressed: null),
+          CircleAvatar(
+            child: Text('${widget.post.data['color']}'),
+          ),
           IconButton(
               icon: Icon(Icons.more_vert, color: Colors.white),
               onPressed: () {
-                print(
-                    'Click option จ้า >>>  จะใช้ตรงนี้เพื่อส่ง notification นะ');
+                print('Click option จ้า');
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => UploadMultipleImage()));
+
+                setState(() {
+                  thisInstant = DateTime.now();
+                  print('thisInstant ===>> $thisInstant');
+                });
               }),
           SizedBox(
-            width: 15.0,
+            width: 5.0,
           )
         ],
       ),
@@ -947,38 +713,31 @@ class _DailyReportDetailState extends State<DailyReportDetail> {
         padding: const EdgeInsets.all(8.0),
         child: ListView(
           children: <Widget>[
-            // showTextSubject('Daily Report : 3/4/2563'),
-            // showCoverReport(),
-            // SizedBox(height: 10.0),
+            showDailyReportTitleTable(),
 
-            showTextTitle('รูปถ่ายประจำวัน', 'add', 18.0, () {
-              print('กด รูปถ่ายประจำวัน');
-              MaterialPageRoute route =
-                  MaterialPageRoute(builder: (BuildContext context) {
-                return AddDailyImagePage();
-              });
-              Navigator.of(context).push(route); // กดย้อนกลับได้
-            }),
-            // Features(),
+            showTextTitle('รูปถ่ายประจำวัน', 'add', 18.0,
+                () => navigateToDetail(widget.post.documentID)),
             _imageList2(),
-            // GridSubject(),
-            showTextTitle('รายงานความก้าวหน้า', 'add', 22.0, () {}),
-            showProgressDataTable2(),
+            showTextTitle('รายงานความก้าวหน้า', 'add', 18.0,
+                () => addDailyProgress(context)),
+            // buildListTile('no','item(s)','actual'),
+            showDailyProgress(),
+            SizedBox(height: 18.0),
+            showTextTitle('Staff', 'add', 18.0, () => addDailyStaff(context)),
+            // buildListTile('no','staff(s)','actual'),
+            showDailyStaff(),
             SizedBox(height: 18.0),
             showTextTitle('แรงงาน', 'add', 18.0, () {}),
-            showStaffDataTable(),
-            SizedBox(height: 18.0),
-            showTextTitle('แรงงาน', 'add', 18.0, () {}),
-            showManpoerDataTable(),
+            // showListview(),
             SizedBox(height: 18.0),
             showTextTitle('วัสดุ', 'add', 18.0, () {}),
-            showMaterialDataTable(),
+            // showListview(),
             SizedBox(height: 18.0),
             showTextTitle('เครื่องจักร', 'add', 18.0, () {}),
-            showMachineDataTable(),
+            // showListview(),
             // MainGridList(),
-            SizedBox(height: 100.0),
-            acceptButton(),
+            // SizedBox(height: 50.0),
+            // acceptButton(),
             SizedBox(
               height: 100.0,
             ),
